@@ -1,0 +1,19 @@
+.nav {
+  margin: 0;
+  padding: 0.5rem 0;
+  background-color: white;
+}
+
+.nav-item {
+  display: inline;
+  margin-left: 1rem;
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  .logout {
+    float: right;
+    margin-right: 1rem;
+    cursor: pointer;
+  }
+}

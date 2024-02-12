@@ -1,0 +1,19 @@
+<div *ngIf="isLoggedIn()">
+  <ul class="nav">
+    <li *ngFor="let navbarElement of navbarElements" class="nav-item">
+      <a routerLink="{{navbarElement.route}}">
+        {{navbarElement.name}}
+        <input
+          *ngIf="isSearchPage(navbarElement)"
+          type="text"
+          name="search"
+          id="search"
+          (change)="searchForTerm(searchTerm)"
+          [(ngModel)]="searchTerm">
+      </a>
+    </li>
+    <li class="nav-item">
+      <a (click)="logout()" class="logout">Logout</a>
+    </li>
+  </ul>
+</div>
