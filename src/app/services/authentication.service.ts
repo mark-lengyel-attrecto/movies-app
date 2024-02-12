@@ -15,7 +15,7 @@ export class AuthenticationService {
   public currentUser: Observable<User | null>;
 
   constructor(private http: HttpClient, private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<User | null>(AuthenticationService.getUser());
+    this.currentUserSubject = new BehaviorSubject<User | null>(this.getUser());
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -23,11 +23,11 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
-  private static saveUser(user: User): void {
+  private saveUser(user: User): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
-  private static getUser(): User | null {
+  getUser(): User | null {
     const localStorageUser = localStorage.getItem('currentUser');
     if (localStorageUser) {
       return JSON.parse(localStorageUser);
@@ -39,7 +39,7 @@ export class AuthenticationService {
     return this.http.post<User>(`${environment.emailApiUrl}/users/authenticate`, {username, password})
       .pipe(map(user => {
         user.authdata = window.btoa(username + ':' + password);
-        AuthenticationService.saveUser(user);
+        this.saveUser(user);
         this.currentUserSubject.next(user);
         return user;
       }));

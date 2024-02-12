@@ -1,19 +1,16 @@
-.nav {
-  margin: 0;
-  padding: 0.5rem 0;
-  background-color: white;
+.w-40 {
+  width: 40%;
 }
 
-.nav-item {
-  display: inline;
-  margin-left: 1rem;
-  a {
-    text-decoration: none;
-    color: black;
-  }
-  .logout {
-    float: right;
-    margin-right: 1rem;
-    cursor: pointer;
-  }
+.w-30 {
+  width: 30%;
+}
+
+.search-min-width {
+  min-width: 10rem;
+}
+
+.collapse-button-position {
+  top: 0.5rem;
+  right: 0.5rem;
 }

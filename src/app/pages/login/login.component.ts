@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from "@angular/router";
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from "@angular/router";
+import {AbstractControl, FormBuilder, FormGroup, NgForm, Validators} from "@angular/forms";
 
 import {AuthenticationService} from "src/app/services/authentication.service";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -12,13 +12,14 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  @ViewChild('loginFormElement') loginFormElement!: NgForm;
+
   loading: boolean = false;
   returnUrl: string = '';
   error = '';
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService) {
   }
@@ -35,34 +36,44 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  isErrorOutputEnabled(formControlName: string): boolean {
+    if (this.loginFormElement) {
+      return this.hasError(formControlName) && this.loginFormElement.submitted;
+    } else {
+      return false;
+    }
+  }
+
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{6,}$')]]
     });
+
   }
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
       return;
-    }
+    } else {
 
-    this.loading = true;
-    this.authenticationService.login(this.loginFormControls['username'].value, this.loginFormControls['password'].value)
-      .subscribe({
-        next: () => {
-          this.router.navigate([this.returnUrl]);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.loading = false;
-          switch (error.status) {
-            case 404:
-              this.error = "Wrong username or password!";
-              break;
-            default:
-              this.error = error.message;
+      this.loading = true;
+      this.authenticationService.login(this.loginFormControls['username'].value, this.loginFormControls['password'].value)
+        .subscribe({
+          next: () => {
+            this.router.navigate([this.returnUrl]);
+          },
+          error: (error: HttpErrorResponse) => {
+            this.loading = false;
+            switch (error.status) {
+              case 404:
+                this.error = "Wrong username or password!";
+                break;
+              default:
+                this.error = error.message;
+            }
           }
-        }
-      });
+        });
+    }
   }
 }

@@ -1,11 +1,51 @@
-<div>
-  <div class="grid-container">
-    <div *ngFor="let movie of movies" class="grid-item">
-      <img src="{{movieService.posterBase + movie.poster_path}}" alt="{{movie.original_title}}" class="image">
-      <div class="text">
-        <p>{{movie.original_title}}</p>
-        <p>{{movie.release_date.split('-')[0]}}</p>
+<div *ngIf="!isLoading">
+  <div *ngIf="movies.length !== 0">
+    <h1 *ngIf="onSearchPage()" class="d-flex justify-content-center m-3 mb-1">
+      {{currentResponse.total_results}} search result(s)
+    </h1>
+    <div class="row row-cols-1 row-cols-md-5 g-4 m-1 footer-margin">
+      <div *ngFor="let movie of movies" class="col">
+        <div (click)="openDialog(movie)" role="button" class="card card-fade h-100">
+          <div class="card-image">
+            <img *ngIf="movie.poster_path"
+                 [src]="movieService.posterBase + movie.poster_path"
+                 [alt]="movie.original_title"
+                 class="card-img-top h-100">
+            <img *ngIf="!movie.poster_path"
+                 src="/assets/images/not-found.png"
+                 alt="not found"
+                 class="card-img-top h-100">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title h-30 overflow-hidden">{{movie.original_title}}</h5>
+            <h6 class="card-subtitle fw-bold">Genres</h6>
+            <p class="card-text h-30 overflow-hidden">{{getGenreString(movie)}}</p>
+            <h6 class="card-subtitle fw-bold">Release</h6>
+            <p class="card-text h-15 overflow-hidden">{{getReleaseDate(movie) | releaseDate: 'yyyy'}}</p>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="d-flex justify-content-center align-items-center container-fluid bg-light mt-4 footer">
+      <ul class="pagination m-0 py-2">
+        <li class="page-item">
+          <a (click)="jumpToPage(this.currentResponse.page - 1)" role="button" class="page-link">
+            Previous
+          </a>
+        </li>
+        <li *ngFor="let page of getPaginatorRange()" [class.active]="this.isCurrentPage(page)" class="page-item">
+          <a role="button" (click)="jumpToPage(page)" class="page-link">{{page}}</a>
+        </li>
+        <li class="page-item">
+          <a role="button" class="page-link" (click)="jumpToPage(this.currentResponse.page + 1)">Next</a>
+        </li>
+      </ul>
+    </div>
   </div>
+  <div *ngIf="(movies.length === 0)">
+    <h1 class="d-flex justify-content-center m-3">No results!</h1>
+  </div>
+</div>
+<div *ngIf="isLoading" class="d-flex justify-content-center m-3">
+  <span class="spinner-border"></span>
 </div>

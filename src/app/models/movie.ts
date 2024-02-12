@@ -1,10 +1,11 @@
 import { Crew } from "./crew";
 import { Cast } from "./cast";
+import {Genre} from "./genre";
 
 export interface Movie {
   adult: boolean;
   backdrop_path: string;
-  genre_ids: Array<unknown>;
+  genre_ids: Array<number>;
   id: number;
   original_language: string;
   original_title: string;
@@ -18,4 +19,8 @@ export interface Movie {
   vote_count: number;
   crew_list: Array<Crew>;
   cast_list: Array<Cast>;
+  genres: Array<Genre>;
+  runtime: number;
+  production_countries: Array<{iso_3166_1: string, name: string}>;
+  imdb_id: string;
 }

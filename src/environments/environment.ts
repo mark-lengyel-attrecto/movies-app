@@ -6,13 +6,17 @@ export const environment = {
   emailApiUrl: 'http://localhost:4200',
   movieApi: {
     key: '1c5abaaeaa13c66b570ad3042a0d51f4',
-    posterBase: 'https://image.tmdb.org/t/p/w500',
+    posterBase: 'https://image.tmdb.org/t/p/w200',
+    posterBaseHighRes: 'https://image.tmdb.org/t/p/w500',
     configuration: 'https://api.themoviedb.org/3/configuration', //?api_key=<api_key>&language=en-US
     popular: 'https://api.themoviedb.org/3/movie/popular',
     topRated: 'https://api.themoviedb.org/3/movie/top_rated',
-    trending: 'https://api.themoviedb.org/3/trending/all/week',
-    search: 'https://api.themoviedb.org/3/search/movie'
+    trending: 'https://api.themoviedb.org/3/trending/movie/week',
+    search: 'https://api.themoviedb.org/3/search/movie',
+    details: 'https://api.themoviedb.org/3/movie',
+    genres: 'https://api.themoviedb.org/3/genre/movie/list'
   },
+  imdbBaseUrl: 'https://www.imdb.com/title',
   production: false
 };
 

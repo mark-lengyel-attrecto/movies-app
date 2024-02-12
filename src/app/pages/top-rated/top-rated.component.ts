@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
 
-import {TmdbService} from "../../services/tmdb.service";
-import {Response} from "../../models/response";
+import {MovieService} from "../../services/movie.service";
+import {PaginatedMovieResponse} from "../../models/paginated-response";
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-top-rated',
@@ -10,12 +11,14 @@ import {Response} from "../../models/response";
   styleUrls: ['./top-rated.component.scss']
 })
 export class TopRatedComponent implements OnInit {
-  movieData: Observable<Response> = new Observable<Response>();
+  movieData: Observable<PaginatedMovieResponse> = new Observable<PaginatedMovieResponse>();
 
-  constructor(public movieService: TmdbService) {
+  constructor(public movieService: MovieService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.movieData = this.movieService.getTopRated();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.movieData = this.movieService.getTopRated(parseInt(params['page'] ?? 1));
+    })
   }
 }

@@ -1,32 +1,38 @@
-<div class="container rounded light shadow-lg overflow-hidden w-25 mt-5">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" #formElement="ngForm">
+<div class="container rounded bg-light shadow-lg overflow-hidden w-25 mt-5">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" #loginFormElement="ngForm">
     <div class="form-group">
       <label for="username" class="my-2">Username</label>
-      <input [ngClass]="{ 'is-invalid': formElement.submitted && hasError('username')}"
+
+      <input [ngClass]="{ 'is-invalid': isErrorOutputEnabled('username')}"
              id="username"
              formControlName="username"
              class="form-control"/>
-      <div *ngIf="formElement.submitted && hasError('username')" class="invalid-feedback">
+
+      <div *ngIf="isErrorOutputEnabled('username')" class="invalid-feedback">
         <div *ngIf="hasError('username', 'email')">Username is invalid!</div>
         <div *ngIf="hasError('username', 'required')">Username is required!</div>
       </div>
+
     </div>
     <div class="form-group">
       <label for="password" class="my-2">Password</label>
-      <input [ngClass]="{ 'is-invalid': formElement.submitted && hasError('password') }"
+
+      <input [ngClass]="{ 'is-invalid': isErrorOutputEnabled('password') }"
              id="password"
              type="password"
              formControlName="password"
              class="form-control"/>
-      <div *ngIf="formElement.submitted && hasError('password')" class="invalid-feedback">
+
+      <div *ngIf="isErrorOutputEnabled('password')" class="invalid-feedback">
         <div *ngIf="hasError('password', 'pattern')">Password is invalid!</div>
         <div *ngIf="hasError('password', 'required')">Password is required!</div>
       </div>
+
     </div>
     <button [disabled]="loading" class="btn btn-primary my-2">
       <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
       Login
     </button>
-    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
   </form>
 </div>
