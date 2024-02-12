@@ -1,0 +1,17 @@
+:host {
+  .card-fade {
+    transition: filter ease-in-out 200ms;
+  }
+
+  .card-fade:hover {
+    filter: brightness(80%);
+  }
+
+  .card-image {
+    max-height: 60%;
+
+    img {
+      object-fit: cover;
+    }
+  }
+}

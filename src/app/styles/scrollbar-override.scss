@@ -1,0 +1,26 @@
+:root {
+  --scrollbar-width: 10px;
+  --scrollbar-thumb-padding: 2px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  --bs-bg-opacity: 1;
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: calc(var(--scrollbar-width) / 2);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: grey;
+}

@@ -1,8 +1,11 @@
-.search-min-width {
-  min-width: 10rem;
-}
+@import 'bootstrap/scss/bootstrap-utilities';
 
-.collapse-button-position {
-  top: 0.5rem;
-  right: 0.5rem;
+:host {
+  .form-control {
+    width: 15rem;
+
+    @include media-breakpoint-down(lg) {
+      width: 100%;
+    }
+  }
 }

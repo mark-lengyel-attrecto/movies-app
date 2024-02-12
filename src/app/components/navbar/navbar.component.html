@@ -1,4 +1,4 @@
-<nav *ngIf="isLoggedIn()" class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+<nav *ngIf="isLoggedIn()" class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a routerLink="/home" class="navbar-brand">
       Movies
@@ -6,7 +6,7 @@
 
     <button
       (click)="toggleCollapse()"
-      class="navbar-toggler position-fixed collapse-button-position mb-2"
+      class="navbar-toggler"
       type="button"
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
@@ -40,12 +40,13 @@
             #searchFormElement="ngForm"
             class="d-flex"
             role="search">
-            <input [ngClass]="{ 'is-invalid': hasSearchError()}"
+            <input
+              [ngClass]="{ 'is-invalid': hasSearchError()}"
               (focus)="setFocus(true)"
               (blur)="setFocus(false)"
               formControlName="search"
               id="search"
-              class="form-control me-2 search-min-width"
+              class="form-control me-2"
               type="search"
               placeholder="Search"
               aria-label="Search">
@@ -55,7 +56,7 @@
           </form>
         </li>
 
-        <li class="nav-item ms-auto py-2 py-lg-0 pe-lg-2">
+        <li class="nav-item ms-auto py-2 py-lg-0">
           <a class="text-decoration-none text-reset h-100 pe-2">
             {{ getUsername() }}
           </a>
