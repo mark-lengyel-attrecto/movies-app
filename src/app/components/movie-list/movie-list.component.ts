@@ -1,24 +1,24 @@
-import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
-import {MovieService} from "../../services/movie.service";
-import {Observable} from "rxjs";
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { MovieService } from '../../services/movie.service';
+import { Observable } from 'rxjs';
 
-import {MatDialog} from "@angular/material/dialog";
+import { MatDialog } from '@angular/material/dialog';
 
-import {PaginatedMovieResponse, PaginatedResponse} from "../../models/paginated-response";
-import {Movie} from "../../models/movie";
-import {DialogComponent} from "../dialog/dialog.component";
-import {Router} from '@angular/router';
-import {Genre} from "../../models/genre";
+import { PaginatedMovieResponse, PaginatedResponse } from '../../models/paginated-response';
+import { Movie } from '../../models/movie';
+import { DialogComponent } from '../dialog/dialog.component';
+import { Router } from '@angular/router';
+import { Genre } from '../../models/genre';
 
 @Component({
   selector: 'app-movie-list',
   templateUrl: './movie-list.component.html',
-  styleUrls: ['./movie-list.component.scss']
+  styleUrls: ['./movie-list.component.scss'],
 })
-export class MovieListComponent implements OnInit {
+export class MovieListComponent implements OnInit, OnChanges {
   @Input() movieData: Observable<PaginatedMovieResponse>;
 
-  currentResponse: PaginatedMovieResponse = {page: 0, results: [], total_pages: 0, total_results: 0};
+  currentResponse: PaginatedMovieResponse = { page: 0, results: [], total_pages: 0, total_results: 0 };
   allGenres: Genre[] = [];
   paginatorSize: number = 5;
   isLoading: boolean = true;
@@ -45,7 +45,7 @@ export class MovieListComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["movieData"].previousValue !== changes["movieData"].currentValue) {
+    if (changes['movieData'].previousValue !== changes['movieData'].currentValue) {
       this.getResponseData();
     }
   }
@@ -55,8 +55,8 @@ export class MovieListComponent implements OnInit {
   }
 
   public getGenreString(movie: Movie): string {
-    if ((this.allGenres.length === 0) || (movie.genre_ids.length === 0)) {
-      return "";
+    if (this.allGenres.length === 0 || movie.genre_ids.length === 0) {
+      return '';
     } else {
       let genreStrings: string[] = [];
 
@@ -84,14 +84,14 @@ export class MovieListComponent implements OnInit {
 
   openDialog(movie: Movie): void {
     let dialogWidth = '50%';
-    
+
     if (window.innerWidth < 600) {
       dialogWidth = '100%';
     }
 
     this.dialog.open(DialogComponent, {
       width: dialogWidth,
-      data: {id: movie.id},
+      data: { id: movie.id },
     });
   }
 
@@ -120,14 +120,13 @@ export class MovieListComponent implements OnInit {
   }
 
   jumpToPage(page: number): void {
-    if ((page < 1) || (page > this.currentResponse.total_pages) || (page === this.currentResponse.page)) {
+    if (page < 1 || page > this.currentResponse.total_pages || page === this.currentResponse.page) {
       return;
     } else {
-
       const urlTree = this.router.createUrlTree([], {
-        queryParams: {page: page},
-        queryParamsHandling: "merge",
-        preserveFragment: true
+        queryParams: { page: page },
+        queryParamsHandling: 'merge',
+        preserveFragment: true,
       });
 
       this.router.navigateByUrl(urlTree);

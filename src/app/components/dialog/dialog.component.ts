@@ -1,33 +1,32 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Movie} from "../../models/movie";
-import {MovieService} from "../../services/movie.service";
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Movie } from '../../models/movie';
+import { MovieService } from '../../services/movie.service';
 
-import {environment} from 'src/environments/environment';
-import {Genre} from "../../models/genre";
+import { environment } from 'src/environments/environment';
+import { Genre } from '../../models/genre';
 
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.scss']
+  styleUrls: ['./dialog.component.scss'],
 })
-export class DialogComponent implements OnInit {
+export class DialogComponent {
   movieData: Movie | null = null;
 
-  constructor(public dialogRef: MatDialogRef<DialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: { id: number },
-              public movieService: MovieService) {
+  constructor(
+    public dialogRef: MatDialogRef<DialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { id: number },
+    public movieService: MovieService
+  ) {
     movieService.getMovieById(data.id).subscribe({
       next: (movie) => {
         this.movieData = movie;
       },
       error: () => {
         this.movieData = null;
-      }
+      },
     });
-  }
-
-  ngOnInit(): void {
   }
 
   closeDialog(): void {
@@ -44,21 +43,21 @@ export class DialogComponent implements OnInit {
 
   getLengthString(movieData: Movie): string {
     const hour = Math.floor(movieData.runtime / 60);
-    const minute = movieData.runtime - (hour * 60);
+    const minute = movieData.runtime - hour * 60;
 
     let lengthString: string;
 
     if (hour > 0) {
-      lengthString = `${hour} hour ${minute} minute`
+      lengthString = `${hour} hour ${minute} minute`;
     } else {
-      lengthString = `${minute} minute`
+      lengthString = `${minute} minute`;
     }
 
     return lengthString;
   }
 
   getMovieCountries(movieData: Movie): string {
-    return this.getListString<{ iso_3166_1: string, name: string }>(movieData.production_countries, 'name');
+    return this.getListString<{ iso_3166_1: string; name: string }>(movieData.production_countries, 'name');
   }
 
   public getListString<ModelType>(list: ModelType[], propertyName: Extract<keyof ModelType, string>) {
@@ -76,5 +75,4 @@ export class DialogComponent implements OnInit {
   getIMDBLink(movieData: Movie): string {
     return `${environment.imdbBaseUrl}/${movieData.imdb_id}`;
   }
-
 }

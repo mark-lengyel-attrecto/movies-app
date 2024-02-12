@@ -10,8 +10,7 @@
       type="button"
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+      aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -35,15 +34,13 @@
         </li>
 
         <li class="nav-item py-2 py-lg-0 ps-lg-2">
-          <form 
+          <form
             [formGroup]="searchForm"
             (ngSubmit)="searchForTerm()"
             #searchFormElement="ngForm"
             class="d-flex"
-            role="search"
-          >
-            <input
-              [ngClass]="{ 'is-invalid': hasSearchError()}"
+            role="search">
+            <input [ngClass]="{ 'is-invalid': hasSearchError()}"
               (focus)="setFocus(true)"
               (blur)="setFocus(false)"
               formControlName="search"
@@ -51,8 +48,7 @@
               class="form-control me-2 search-min-width"
               type="search"
               placeholder="Search"
-              aria-label="Search"
-            >
+              aria-label="Search">
             <button class="btn btn-outline-success" type="submit">
               Search
             </button>
@@ -63,7 +59,7 @@
           <a class="text-decoration-none text-reset h-100 pe-2">
             {{ getUsername() }}
           </a>
-    
+
           <button (click)="logout()" class="btn btn-danger" type="button">
             Logout
           </button>

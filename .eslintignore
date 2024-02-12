@@ -1,0 +1,13 @@
+dist
+e2e
+node_modules
+src/environments
+builds
+
+src/main.ts
+yarn.lock
+package.json
+package-lock.json
+
+karma.conf.js
+protractor.conf.js

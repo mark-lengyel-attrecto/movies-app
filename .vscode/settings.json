@@ -1,3 +1,62 @@
 {
-    "typescript.tsdk": "node_modules\\typescript\\lib"
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": [
+    "source.fixAll.eslint",
+    "source.fixAll.stylelint",
+    "source.addMissingImports"
+  ],
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "stylelint.validate": ["css", "scss"],
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
+  "scssFormatter.printWidth": 9999,
+  "scssFormatter.singleQuote": true,
+  "scssFormatter.trailingComma": "all",
+  "[scss]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint",
+    "editor.formatOnSave": true
+  },
+  "html.format.wrapAttributes": "preserve",
+  "html.format.wrapLineLength": 9999,
+  "html.format.maxPreserveNewLines": 2,
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "regexReplaceOnSave.ruleSets": {
+    "html": {
+      "Angular template interpolation padding start": {
+        "find": "{{([^\\s])(.*)}}",
+        "replace": "{{ $1$2}}"
+      },
+      "Angular template interpolation padding end": {
+        "find": "{{(.*)([^\\s])}}",
+        "replace": "{{$1$2 }}"
+      },
+      "Angular template pipe padding start": {
+        "find": "([^\\s|^\\|])\\|",
+        "replace": "$1 |"
+      },
+      "Angular template pipe padding end": {
+        "find": "\\|([^\\s|^\\|])",
+        "replace": "| $1"
+      },
+    }
+  },
 }
