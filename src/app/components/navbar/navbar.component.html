@@ -1,7 +1,7 @@
 <nav *ngIf="isLoggedIn()" class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a routerLink="/home" class="navbar-brand">
-      Attrecto Movies
+      Movies
     </a>
 
     <button
@@ -16,7 +16,7 @@
     </button>
 
     <div [class.collapse]="isCollapsed" class="navbar-collapse">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav mb-2 mb-lg-0 w-100">
         <li *ngFor="let navbarElement of navbarElements" class="nav-item">
 
           <a [routerLink]="navbarElement.route"
@@ -33,35 +33,42 @@
           </a>
 
         </li>
+
+        <li class="nav-item py-2 py-lg-0 ps-lg-2">
+          <form 
+            [formGroup]="searchForm"
+            (ngSubmit)="searchForTerm()"
+            #searchFormElement="ngForm"
+            class="d-flex"
+            role="search"
+          >
+            <input
+              [ngClass]="{ 'is-invalid': hasSearchError()}"
+              (focus)="setFocus(true)"
+              (blur)="setFocus(false)"
+              formControlName="search"
+              id="search"
+              class="form-control me-2 search-min-width"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            >
+            <button class="btn btn-outline-success" type="submit">
+              Search
+            </button>
+          </form>
+        </li>
+
+        <li class="nav-item ms-auto py-2 py-lg-0 pe-lg-2">
+          <a class="text-decoration-none text-reset h-100 pe-2">
+            {{ getUsername() }}
+          </a>
+    
+          <button (click)="logout()" class="btn btn-danger" type="button">
+            Logout
+          </button>
+        </li>
       </ul>
-      <form 
-        [formGroup]="searchForm"
-        (ngSubmit)="searchForTerm()"
-        #searchFormElement="ngForm"
-        class="d-flex w-30 mb-2"
-        role="search"
-      >
-        <input
-          [ngClass]="{ 'is-invalid': hasSearchError()}"
-          (focus)="setFocus(true)"
-          (blur)="setFocus(false)"
-          formControlName="search"
-          id="search"
-          class="form-control me-2 search-min-width"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        >
-        <button class="btn btn-outline-success" type="submit">
-          Search
-        </button>
-      </form>
-      <a class="text-decoration-none text-reset mx-2">
-        {{getUsername()}}
-      </a>
-      <button (click)="logout()" class="btn btn-danger mb-1" type="button">
-        Logout
-      </button>
     </div>
   </div>
 </nav>
