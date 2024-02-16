@@ -1,4 +1,4 @@
-<div (click)="openDialog(movie)" role="button" class="card card-fade h-100">
+<div (click)="dialog.openDialog()" role="button" class="card card-fade h-100">
   <div class="card-image">
     <img *ngIf="movie.poster_path"
       [src]="movieService.posterBase + movie.poster_path"
@@ -10,10 +10,12 @@
       class="card-img-top h-100">
   </div>
   <div class="card-body">
-    <h5 class="card-title h-30 overflow-hidden">{{movie.original_title}}</h5>
+    <h5 class="card-title h-30 overflow-hidden">{{ movie.original_title }}</h5>
     <h6 class="card-subtitle fw-bold">Genres</h6>
     <p class="card-text h-30 overflow-hidden">{{ genreString }}</p>
     <h6 class="card-subtitle fw-bold">Release</h6>
     <p class="card-text h-15 overflow-hidden">{{ releaseDate | releaseDate: 'yyyy' }}</p>
   </div>
 </div>
+
+<app-dialog #dialog [movieId]="movie.id"></app-dialog>

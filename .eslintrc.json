@@ -18,6 +18,9 @@
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
+      "plugins": [
+        "unused-imports"
+      ],
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
@@ -34,6 +37,16 @@
             "prefix": "app",
             "style": "kebab-case"
           }
+        ],
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
+            "warn",
+            {
+                "vars": "all",
+                "varsIgnorePattern": "^_",
+                "args": "after-used",
+                "argsIgnorePattern": "^_"
+            }
         ]
       }
     },

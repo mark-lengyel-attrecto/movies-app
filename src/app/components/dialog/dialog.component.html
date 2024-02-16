@@ -1,83 +1,96 @@
-<div *ngIf="movieData">
-  <div class="modal-header">
-    <h3 class="modal-title">{{movieData.original_title}}</h3>
-    <button
-      (click)="closeDialog()"
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="modal"
-      aria-label="Close"
-    ></button>
-  </div>
-  <div mat-dialog-content class="modal-body my-2">
-    <img *ngIf="movieData.backdrop_path"
-         [src]="movieService.posterBaseHighRes + movieData.backdrop_path"
-         [alt]="movieData.original_title"
-         class="rounded w-100 mb-4">
+<div #modal class="modal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
 
-    <div class="card text-dark bg-light mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Overview</h5>
-        <p class="card-text">{{movieData.overview}}</p>
-        <a [href]="getIMDBLink(movieData)" target="_blank">IMDB page</a>
+    <!-- CONTENT -->
+    <div *ngIf="movieData; else loading" class="modal-content">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h3 class="modal-title">{{ movieData.original_title }}</h3>
+        <button
+          (click)="closeDialog()"
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
       </div>
+
+      <!-- BODY -->
+      <div class="modal-body my-2">
+        <img *ngIf="movieData.backdrop_path"
+          [src]="baseUrl + movieData.backdrop_path"
+          [alt]="movieData.original_title"
+          class="rounded w-100 mb-4">
+
+        <div class="card text-dark bg-light mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Overview</h5>
+            <p class="card-text">{{ movieData.overview }}</p>
+            <a [href]="getIMDBLink(movieData)" target="_blank">IMDB page</a>
+          </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+
+          <div class="col">
+            <div class="card text-dark bg-light mb-3 h-100">
+              <div class="card-body">
+                <h5 class="card-title">Genres</h5>
+                <p class="card-text">{{ getGenreString(movieData) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card text-dark bg-light mb-3 h-100">
+              <div class="card-body">
+                <h5 class="card-title">Release</h5>
+                <p class="card-text">{{ getReleaseYear(movieData) | releaseDate: 'yyyy' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card text-dark bg-light mb-3 h-100">
+              <div class="card-body">
+                <h5 class="card-title">Length</h5>
+                <p class="card-text">{{ getLengthString(movieData) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card text-dark bg-light mb-3 h-100">
+              <div class="card-body">
+                <h5 class="card-title">Countries</h5>
+                <p class="card-text">{{ getMovieCountries(movieData) }}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button
+          (click)="closeDialog()"
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+
     </div>
 
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-
-      <div class="col">
-        <div class="card text-dark bg-light mb-3 h-100">
-          <div class="card-body">
-            <h5 class="card-title">Genres</h5>
-            <p class="card-text">{{getGenreString(movieData)}}</p>
-          </div>
-        </div>
+    <!-- LOADER -->
+    <ng-template #loading>
+      <div class="modal-content align-items-center">
+        <span class="spinner-border my-5"></span>
       </div>
+    </ng-template>
 
-      <div class="col">
-        <div class="card text-dark bg-light mb-3 h-100">
-          <div class="card-body">
-            <h5 class="card-title">Release</h5>
-            <p class="card-text">{{getReleaseYear(movieData) | releaseDate: 'yyyy'}}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card text-dark bg-light mb-3 h-100">
-          <div class="card-body">
-            <h5 class="card-title">Length</h5>
-            <p class="card-text">{{getLengthString(movieData)}}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card text-dark bg-light mb-3 h-100">
-          <div class="card-body">
-            <h5 class="card-title">Countries</h5>
-            <p class="card-text">{{getMovieCountries(movieData)}}</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-  <div class="modal-footer">
-    <button
-      (click)="closeDialog()"
-      type="button"
-      class="btn btn-secondary"
-      data-bs-dismiss="modal"
-    >
-      Close
-    </button>
   </div>
 </div>
-<div *ngIf="!movieData">
-  <div class="d-flex justify-content-center">
-    <span class="spinner-border"></span>
-  </div>
-</div>
-

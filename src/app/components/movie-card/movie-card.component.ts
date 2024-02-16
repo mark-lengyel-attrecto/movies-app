@@ -1,10 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { map } from 'rxjs';
 import { Genre } from 'src/app/models/genre';
 import { Movie } from 'src/app/models/movie';
 import { MovieService } from 'src/app/services/movie.service';
-import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-movie-card',
@@ -17,24 +15,11 @@ export class MovieCardComponent implements OnInit {
   genreString: string = '';
   releaseDate: string = '';
 
-  constructor(protected movieService: MovieService, public dialog: MatDialog) {}
+  constructor(protected movieService: MovieService) {}
 
   ngOnInit(): void {
     this.getGenreString();
     this.getReleaseDate();
-  }
-
-  openDialog(movie: Movie): void {
-    let dialogWidth = '50%';
-
-    if (window.innerWidth < 600) {
-      dialogWidth = '100%';
-    }
-
-    this.dialog.open(DialogComponent, {
-      width: dialogWidth,
-      data: { id: movie.id },
-    });
   }
 
   public getGenreString(): void {
