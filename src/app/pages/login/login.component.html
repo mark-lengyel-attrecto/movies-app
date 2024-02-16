@@ -1,12 +1,12 @@
-<div class="container rounded bg-light shadow-lg overflow-hidden w-25 mt-5">
+<div class="container rounded bg-body shadow-lg overflow-hidden w-25 mt-5">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" #loginFormElement="ngForm">
     <div class="form-group">
       <label for="username" class="my-2">Username</label>
 
       <input [ngClass]="{ 'is-invalid': isErrorOutputEnabled('username')}"
-             id="username"
-             formControlName="username"
-             class="form-control"/>
+        id="username"
+        formControlName="username"
+        class="form-control" />
 
       <div *ngIf="isErrorOutputEnabled('username')" class="invalid-feedback">
         <div *ngIf="hasError('username', 'email')">Username is invalid!</div>
@@ -18,10 +18,10 @@
       <label for="password" class="my-2">Password</label>
 
       <input [ngClass]="{ 'is-invalid': isErrorOutputEnabled('password') }"
-             id="password"
-             type="password"
-             formControlName="password"
-             class="form-control"/>
+        id="password"
+        type="password"
+        formControlName="password"
+        class="form-control" />
 
       <div *ngIf="isErrorOutputEnabled('password')" class="invalid-feedback">
         <div *ngIf="hasError('password', 'pattern')">Password is invalid!</div>
@@ -33,6 +33,6 @@
       <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
       Login
     </button>
-    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
   </form>
 </div>

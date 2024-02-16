@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, HostBinding, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { Observable, switchMap } from 'rxjs';
 import { PaginatedMovieResponse } from '../../models/paginated-response';
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 })
 export class MovieListComponent implements OnChanges {
   @Input() movieData: Observable<PaginatedMovieResponse>;
+
+  @HostBinding('class') hostClass = 'h-100';
 
   currentResponse: PaginatedMovieResponse = { page: 0, results: [], total_pages: 0, total_results: 0 };
   isLoading: boolean = true;

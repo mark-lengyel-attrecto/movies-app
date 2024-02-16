@@ -22,7 +22,7 @@
           [alt]="movieData.original_title"
           class="rounded w-100 mb-4">
 
-        <div class="card text-dark bg-light mb-4">
+        <div class="card bg-body-tertiary mb-4">
           <div class="card-body">
             <h5 class="card-title">Overview</h5>
             <p class="card-text">{{ movieData.overview }}</p>
@@ -33,7 +33,7 @@
         <div class="row row-cols-1 row-cols-md-2 g-4">
 
           <div class="col">
-            <div class="card text-dark bg-light mb-3 h-100">
+            <div class="card bg-body-tertiary mb-3 h-100">
               <div class="card-body">
                 <h5 class="card-title">Genres</h5>
                 <p class="card-text">{{ getGenreString(movieData) }}</p>
@@ -42,7 +42,7 @@
           </div>
 
           <div class="col">
-            <div class="card text-dark bg-light mb-3 h-100">
+            <div class="card bg-body-tertiary mb-3 h-100">
               <div class="card-body">
                 <h5 class="card-title">Release</h5>
                 <p class="card-text">{{ getReleaseYear(movieData) | releaseDate: 'yyyy' }}</p>
@@ -51,7 +51,7 @@
           </div>
 
           <div class="col">
-            <div class="card text-dark bg-light mb-3 h-100">
+            <div class="card bg-body-tertiary mb-3 h-100">
               <div class="card-body">
                 <h5 class="card-title">Length</h5>
                 <p class="card-text">{{ getLengthString(movieData) }}</p>
@@ -60,7 +60,7 @@
           </div>
 
           <div class="col">
-            <div class="card text-dark bg-light mb-3 h-100">
+            <div class="card bg-body-tertiary mb-3 h-100">
               <div class="card-body">
                 <h5 class="card-title">Countries</h5>
                 <p class="card-text">{{ getMovieCountries(movieData) }}</p>

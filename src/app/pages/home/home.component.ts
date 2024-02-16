@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { MovieService } from '../../services/movie.service';
@@ -11,6 +11,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';
+
   movieData: Observable<PaginatedMovieResponse> = new Observable<PaginatedMovieResponse>();
 
   constructor(public movieService: MovieService, private activatedRoute: ActivatedRoute) {}

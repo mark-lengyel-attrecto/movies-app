@@ -1,0 +1,8 @@
+@import 'bootstrap/scss/bootstrap-utilities';
+
+:host {
+  .spinner-border {
+    --#{$prefix}spinner-height: 4rem;
+    --#{$prefix}spinner-width: 4rem;
+  }
+}
