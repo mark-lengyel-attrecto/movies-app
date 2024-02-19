@@ -1,14 +1,17 @@
 import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, NgClass, NgIf],
 })
 export class LoginComponent implements OnInit {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';

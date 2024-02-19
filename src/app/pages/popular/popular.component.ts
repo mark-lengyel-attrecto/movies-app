@@ -3,12 +3,15 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { MovieService } from '../../services/movie.service';
 import { PaginatedMovieResponse } from '../../models/paginated-response';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MovieListComponent } from '../../components/movie-list/movie-list.component';
 
 @Component({
   selector: 'app-popular',
   templateUrl: './popular.component.html',
   styleUrls: ['./popular.component.scss'],
+  standalone: true,
+  imports: [RouterLink, MovieListComponent],
 })
 export class PopularComponent implements OnInit, OnDestroy {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';

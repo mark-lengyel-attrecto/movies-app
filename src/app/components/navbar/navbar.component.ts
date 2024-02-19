@@ -1,15 +1,26 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavbarElement } from '../../models/navbar-element';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Theme, ThemeSwitcherService } from 'src/app/services/theme-switcher.service';
 import { map, Subject, takeUntil } from 'rxjs';
+import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss'],
+    selector: 'app-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.scss'],
+    standalone: true,
+    imports: [
+        NgIf,
+        RouterLink,
+        NgFor,
+        FormsModule,
+        ReactiveFormsModule,
+        NgClass,
+        AsyncPipe,
+    ],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   searchForm!: FormGroup;

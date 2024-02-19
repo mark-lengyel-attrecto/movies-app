@@ -5,11 +5,15 @@ import { MovieService } from '../../services/movie.service';
 import { environment } from 'src/environments/environment';
 import { Genre } from '../../models/genre';
 import * as bootstrap from 'bootstrap';
+import { ReleaseDatePipe } from '../../helpers/release-date.pipe';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-dialog',
-  templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.scss'],
+    selector: 'app-dialog',
+    templateUrl: './dialog.component.html',
+    styleUrls: ['./dialog.component.scss'],
+    standalone: true,
+    imports: [NgIf, ReleaseDatePipe],
 })
 export class DialogComponent implements AfterViewInit {
   @Input() movieId: number | null = null;
