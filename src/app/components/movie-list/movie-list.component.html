@@ -8,12 +8,12 @@
 
       <div class="row row-cols-1 row-cols-lg-5 row-cols-md-3 row-cols-sm-2 m-0 pb-3">
         <div *ngFor="let movie of movies" class="col pt-3">
-          <app-movie-card [movie]="movie"></app-movie-card>
+          <app-movie-card [movie]="movie" />
         </div>
       </div>
     </div>
 
-    <app-paginator [currentResponse]="currentResponse"></app-paginator>
+    <app-paginator [currentResponse]="currentResponse" />
 
   </div>
 
