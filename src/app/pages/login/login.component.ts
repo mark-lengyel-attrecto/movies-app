@@ -1,6 +1,6 @@
 import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -26,15 +26,11 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService
   ) {}
 
-  get loginFormControls(): { [key: string]: AbstractControl } {
-    return this.loginForm.controls;
-  }
-
   hasError(formControlName: string, errorType: string | null = null): boolean {
     if (errorType != null) {
-      return this.loginFormControls[formControlName].hasError(errorType);
+      return this.loginForm.get(formControlName)?.hasError(errorType) || false;
     } else {
-      return this.loginFormControls[formControlName].invalid;
+      return this.loginForm.get(formControlName)?.invalid || false;
     }
   }
 
@@ -59,7 +55,7 @@ export class LoginComponent implements OnInit {
     } else {
       this.loading = true;
       this.authenticationService
-        .login(this.loginFormControls['username'].value, this.loginFormControls['password'].value)
+        .login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value)
         .subscribe({
           next: () => {
             this.router.navigate([this.returnUrl]);

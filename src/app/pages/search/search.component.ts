@@ -1,5 +1,5 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { MovieService } from '../../services/movie.service';
 import { PaginatedMovieResponse } from '../../models/paginated-response';
@@ -11,15 +11,26 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';
+
+  private destroy$ = new Subject<void>();
 
   movieData: Observable<PaginatedMovieResponse> = new Observable<PaginatedMovieResponse>();
 
   constructor(public movieService: MovieService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe((params) => {
+    this.subscribeToQueryParams();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private subscribeToQueryParams(): void {
+    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       if (params['query']) {
         this.movieData = this.movieService.search(params['query'], parseInt(params['page'] ?? 1));
       } else {

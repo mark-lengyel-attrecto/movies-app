@@ -1,26 +1,44 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavbarElement } from '../../models/navbar-element';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Theme, ThemeSwitcherService } from 'src/app/services/theme-switcher.service';
+import { map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   searchForm!: FormGroup;
   @ViewChild('searchFormElement') searchFromElement!: NgForm;
 
-  public navbarElements: NavbarElement[];
-  public hasFocus: boolean = false;
+  private destroy$ = new Subject<void>();
+
+  readonly theme = Theme;
+
+  switcherClasses$ = this.themeSwitcher.getCurrentTheme().pipe(
+    map((theme) => {
+      if (theme === Theme.DARK) {
+        return 'bi bi-sun text-body pointer';
+      } else {
+        return 'bi bi-moon text-body pointer';
+      }
+    })
+  );
+
+  navbarElements: NavbarElement[];
+  hasFocus: boolean = false;
 
   private collapsed: boolean = true;
 
   constructor(
-    public authenticationService: AuthenticationService,
-    public router: Router,
+    private authenticationService: AuthenticationService,
+    private themeSwitcher: ThemeSwitcherService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
     this.navbarElements = [
@@ -30,12 +48,23 @@ export class NavbarComponent implements OnInit {
     ];
   }
 
+  get isCollapsed(): boolean {
+    return this.collapsed;
+  }
+
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({
       search: ['', [Validators.required, Validators.minLength(3)]],
     });
 
     this.searchFromElement = new NgForm([], []);
+
+    this.subscribeToQueryParams();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   isLoggedIn(): boolean {
@@ -46,21 +75,21 @@ export class NavbarComponent implements OnInit {
     return this.router.url.endsWith(navbarElement.route);
   }
 
-  public searchForTerm(): void {
+  searchForTerm(): void {
     this.hasFocus = true;
     if (this.searchForm.invalid) {
       return;
     } else {
       this.router.navigate(['/search'], {
         queryParams: {
-          query: this.searchForm.controls['search'].value,
+          query: this.searchForm.get('search')?.value || '',
           page: 1,
         },
       });
     }
   }
 
-  public hasSearchError(): boolean {
+  hasSearchError(): boolean {
     if (this.searchFromElement) {
       return this.searchFromElement.submitted && this.searchForm.invalid && this.hasFocus;
     } else {
@@ -68,12 +97,12 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  public logout(): void {
-    this.searchForm.controls['search'].setValue('');
+  logout(): void {
+    this.searchForm.get('search')?.setValue('');
     this.authenticationService.logout();
   }
 
-  public getUsername(): string {
+  getUsername(): string {
     const user = this.authenticationService.getUser();
 
     if (user) {
@@ -83,15 +112,25 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  public setFocus(setting: boolean): void {
+  setFocus(setting: boolean): void {
     this.hasFocus = setting;
   }
 
-  public toggleCollapse(): void {
+  toggleCollapse(): void {
     this.collapsed = !this.collapsed;
   }
 
-  public get isCollapsed(): boolean {
-    return this.collapsed;
+  toggleDarkMode(): void {
+    this.themeSwitcher.toggleDarkMode();
+  }
+
+  private subscribeToQueryParams(): void {
+    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      if (params['query']) {
+        this.searchForm.get('search')?.patchValue(params['query']);
+      } else {
+        this.searchForm.get('search')?.patchValue('');
+      }
+    });
   }
 }
