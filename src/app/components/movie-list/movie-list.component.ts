@@ -1,8 +1,14 @@
-import { Component, HostBinding, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { Observable, switchMap } from 'rxjs';
-import { PaginatedMovieResponse } from '../../models/paginated-response';
-import { Movie } from '../../models/movie';
+import { PaginatedMovieResponse } from '../../interfaces/paginated-response.interface';
+import { Movie } from '../../interfaces/movie.interface';
 import { Router } from '@angular/router';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { MovieCardComponent } from '../movie-card/movie-card.component';
@@ -19,11 +25,18 @@ export class MovieListComponent implements OnChanges {
 
   @HostBinding('class') hostClass = 'h-100';
 
-  currentResponse: PaginatedMovieResponse = { page: 0, results: [], total_pages: 0, total_results: 0 };
+  currentResponse: PaginatedMovieResponse = {
+    page: 0,
+    results: [],
+    total_pages: 0,
+    total_results: 0,
+  };
   isLoading: boolean = true;
 
   constructor(public movieService: MovieService, private router: Router) {
-    this.movieData = movieService.getAllGenres().pipe(switchMap(() => movieService.getPopular()));
+    this.movieData = movieService
+      .getAllGenres()
+      .pipe(switchMap(() => movieService.getPopular()));
   }
 
   getResponseData(): void {
@@ -35,7 +48,9 @@ export class MovieListComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['movieData'].previousValue !== changes['movieData'].currentValue) {
+    if (
+      changes['movieData'].previousValue !== changes['movieData'].currentValue
+    ) {
       this.getResponseData();
     }
   }

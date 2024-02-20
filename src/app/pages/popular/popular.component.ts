@@ -2,7 +2,7 @@ import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { MovieService } from '../../services/movie.service';
-import { PaginatedMovieResponse } from '../../models/paginated-response';
+import { PaginatedMovieResponse } from '../../interfaces/paginated-response.interface';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MovieListComponent } from '../../components/movie-list/movie-list.component';
 
@@ -18,9 +18,13 @@ export class PopularComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  movieData: Observable<PaginatedMovieResponse> = new Observable<PaginatedMovieResponse>();
+  movieData: Observable<PaginatedMovieResponse> =
+    new Observable<PaginatedMovieResponse>();
 
-  constructor(public movieService: MovieService, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    public movieService: MovieService,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.subscribeToQueryParams();
@@ -32,8 +36,12 @@ export class PopularComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQueryParams(): void {
-    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
-      this.movieData = this.movieService.getPopular(parseInt(params['page'] ?? 1));
-    });
+    this.activatedRoute.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        this.movieData = this.movieService.getPopular(
+          parseInt(params['page'] ?? 1)
+        );
+      });
   }
 }

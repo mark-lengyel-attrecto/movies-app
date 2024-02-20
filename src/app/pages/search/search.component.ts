@@ -2,7 +2,7 @@ import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { MovieService } from '../../services/movie.service';
-import { PaginatedMovieResponse } from '../../models/paginated-response';
+import { PaginatedMovieResponse } from '../../interfaces/paginated-response.interface';
 
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MovieListComponent } from '../../components/movie-list/movie-list.component';
@@ -19,9 +19,13 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  movieData: Observable<PaginatedMovieResponse> = new Observable<PaginatedMovieResponse>();
+  movieData: Observable<PaginatedMovieResponse> =
+    new Observable<PaginatedMovieResponse>();
 
-  constructor(public movieService: MovieService, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    public movieService: MovieService,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.subscribeToQueryParams();
@@ -33,12 +37,17 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQueryParams(): void {
-    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
-      if (params['query']) {
-        this.movieData = this.movieService.search(params['query'], parseInt(params['page'] ?? 1));
-      } else {
-        this.movieData = this.movieService.getPopular();
-      }
-    });
+    this.activatedRoute.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        if (params['query']) {
+          this.movieData = this.movieService.search(
+            params['query'],
+            parseInt(params['page'] ?? 1)
+          );
+        } else {
+          this.movieData = this.movieService.getPopular();
+        }
+      });
   }
 }

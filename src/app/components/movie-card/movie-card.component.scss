@@ -1,18 +1,20 @@
 :host {
-  .card-fade {
+  .card {
     transition: filter ease-in-out 200ms;
-  }
+    height: 34rem;
 
-  .card-fade:hover {
-    filter: brightness(80%);
-  }
+    &:hover {
+      filter: brightness(80%);
+    }
 
-  .card-image {
-    max-height: 60%;
-    height: 60%;
+    .card-image {
+      max-height: 60%;
+      height: 60%;
 
-    img {
-      object-fit: cover;
+      img {
+        object-fit: cover;
+      }
     }
   }
+
 }

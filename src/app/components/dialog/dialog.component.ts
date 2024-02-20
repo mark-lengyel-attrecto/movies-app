@@ -1,11 +1,17 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { Movie } from '../../models/movie';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
+import { Movie } from '../../interfaces/movie.interface';
 import { MovieService } from '../../services/movie.service';
 
 import { environment } from 'src/environments/environment';
-import { Genre } from '../../models/genre';
+import { Genre } from '../../interfaces/genre.interface';
 import * as bootstrap from 'bootstrap';
-import { ReleaseDatePipe } from '../../helpers/release-date.pipe';
+import { ReleaseDatePipe } from '../../pipes/release-date.pipe';
 
 @Component({
   selector: 'app-dialog',
@@ -78,19 +84,32 @@ export class DialogComponent implements AfterViewInit {
   }
 
   getMovieCountries(movieData: Movie): string {
-    return this.getListString<{ iso_3166_1: string; name: string }>(movieData.production_countries, 'name');
+    return this.getListString<{ iso_3166_1: string; name: string }>(
+      movieData.production_countries,
+      'name'
+    );
   }
 
-  getListString<ModelType>(list: ModelType[], propertyName: Extract<keyof ModelType, string>) {
-    return (list || []).reduce((previousValue: string, currentValue: ModelType, currentIndex: number) => {
-      let subString = previousValue + currentValue[propertyName];
+  getListString<ModelType>(
+    list: ModelType[],
+    propertyName: Extract<keyof ModelType, string>
+  ) {
+    return (list || []).reduce(
+      (
+        previousValue: string,
+        currentValue: ModelType,
+        currentIndex: number
+      ) => {
+        let subString = previousValue + currentValue[propertyName];
 
-      if (currentIndex < list.length - 1) {
-        subString += ', ';
-      }
+        if (currentIndex < list.length - 1) {
+          subString += ', ';
+        }
 
-      return subString;
-    }, '');
+        return subString;
+      },
+      ''
+    );
   }
 
   getIMDBLink(movieData: Movie): string {

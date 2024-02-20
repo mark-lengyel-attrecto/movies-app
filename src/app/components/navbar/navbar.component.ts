@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NavbarElement } from '../../models/navbar-element';
+import { NavbarElement } from '../../interfaces/navbar-element.interface';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
 import {

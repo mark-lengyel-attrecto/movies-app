@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { map } from 'rxjs';
-import { Genre } from 'src/app/models/genre';
-import { Movie } from 'src/app/models/movie';
+import { Genre } from 'src/app/interfaces/genre.interface';
+import { Movie } from 'src/app/interfaces/movie.interface';
 import { MovieService } from 'src/app/services/movie.service';
-import { ReleaseDatePipe } from '../../helpers/release-date.pipe';
+import { ReleaseDatePipe } from '../../pipes/release-date.pipe';
 import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({

@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import {environment} from "src/environments/environment";
-import {User} from "src/app/models/user";
-import {Router} from "@angular/router";
+import { environment } from 'src/environments/environment';
+import { User } from 'src/app/interfaces/user.interface';
+import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User | null>;
@@ -36,18 +36,24 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string): Observable<User> {
-    return this.http.post<User>(`${environment.emailApiUrl}/users/authenticate`, {username, password})
-      .pipe(map(user => {
-        user.authdata = window.btoa(username + ':' + password);
-        this.saveUser(user);
-        this.currentUserSubject.next(user);
-        return user;
-      }));
+    return this.http
+      .post<User>(`${environment.emailApiUrl}/users/authenticate`, {
+        username,
+        password,
+      })
+      .pipe(
+        map((user) => {
+          user.authdata = window.btoa(username + ':' + password);
+          this.saveUser(user);
+          this.currentUserSubject.next(user);
+          return user;
+        })
+      );
   }
 
   logout() {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
-    this.router.navigate(["/login"]);
+    this.router.navigate(['/login']);
   }
 }

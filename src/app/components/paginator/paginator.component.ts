@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { PaginatedMovieResponse } from 'src/app/models/paginated-response';
+import { PaginatedMovieResponse } from 'src/app/interfaces/paginated-response.interface';
 
 @Component({
   selector: 'app-paginator',
@@ -16,7 +16,11 @@ export class PaginatorComponent {
   constructor(private router: Router) {}
 
   jumpToPage(page: number): void {
-    if (page < 1 || page > this.currentResponse.total_pages || page === this.currentResponse.page) {
+    if (
+      page < 1 ||
+      page > this.currentResponse.total_pages ||
+      page === this.currentResponse.page
+    ) {
       return;
     } else {
       const urlTree = this.router.createUrlTree([], {

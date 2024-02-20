@@ -1,4 +1,5 @@
-<div (click)="dialog.openDialog()" role="button" class="card card-fade h-100">
+@defer(on viewport) {
+<div (click)="dialog.openDialog()" role="button" class="card">
   <div class="card-image">
     @if(movie.poster_path) {
     <img
@@ -27,3 +28,6 @@
 </div>
 
 <app-dialog #dialog [movieId]="movie.id" />
+} @placeholder {
+<div role="button" class="card"></div>
+}

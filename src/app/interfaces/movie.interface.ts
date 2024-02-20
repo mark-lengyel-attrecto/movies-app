@@ -1,6 +1,6 @@
-import { Crew } from "./crew";
-import { Cast } from "./cast";
-import {Genre} from "./genre";
+import { Crew } from './crew.interface';
+import { Cast } from './cast.interface';
+import { Genre } from './genre.interface';
 
 export interface Movie {
   adult: boolean;
@@ -21,6 +21,6 @@ export interface Movie {
   cast_list: Array<Cast>;
   genres: Array<Genre>;
   runtime: number;
-  production_countries: Array<{iso_3166_1: string, name: string}>;
+  production_countries: Array<{ iso_3166_1: string; name: string }>;
   imdb_id: string;
 }
