@@ -1,9 +1,9 @@
 <div #modal class="modal" tabindex="-1">
   <div class="modal-dialog modal-lg">
-
     <!-- CONTENT -->
-    <div *ngIf="movieData; else loading" class="modal-content">
+    @if(movieData) {
 
+    <div class="modal-content">
       <!-- HEADER -->
       <div class="modal-header">
         <h3 class="modal-title">{{ movieData.original_title }}</h3>
@@ -12,15 +12,18 @@
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        ></button>
       </div>
 
       <!-- BODY -->
       <div class="modal-body my-2">
-        <img *ngIf="movieData.backdrop_path"
+        @if(movieData.backdrop_path) {
+        <img
           [src]="baseUrl + movieData.backdrop_path"
           [alt]="movieData.original_title"
-          class="rounded w-100 mb-4">
+          class="rounded w-100 mb-4"
+        />
+        }
 
         <div class="card bg-body-tertiary mb-4">
           <div class="card-body">
@@ -31,7 +34,6 @@
         </div>
 
         <div class="row row-cols-1 row-cols-md-2 g-4">
-
           <div class="col">
             <div class="card bg-body-tertiary mb-3 h-100">
               <div class="card-body">
@@ -45,7 +47,9 @@
             <div class="card bg-body-tertiary mb-3 h-100">
               <div class="card-body">
                 <h5 class="card-title">Release</h5>
-                <p class="card-text">{{ getReleaseYear(movieData) | releaseDate: 'yyyy' }}</p>
+                <p class="card-text">
+                  {{ getReleaseYear(movieData) | releaseDate : 'yyyy' }}
+                </p>
               </div>
             </div>
           </div>
@@ -67,9 +71,7 @@
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
 
       <!-- FOOTER -->
@@ -78,19 +80,20 @@
           (click)="closeDialog()"
           type="button"
           class="btn btn-secondary"
-          data-bs-dismiss="modal">
+          data-bs-dismiss="modal"
+        >
           Close
         </button>
       </div>
-
     </div>
 
-    <!-- LOADER -->
-    <ng-template #loading>
-      <div class="modal-content align-items-center">
-        <span class="spinner-border my-5"></span>
-      </div>
-    </ng-template>
+    } @else {
 
+    <!-- LOADER -->
+    <div class="modal-content align-items-center">
+      <span class="spinner-border my-5"></span>
+    </div>
+
+    }
   </div>
 </div>

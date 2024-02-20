@@ -2,25 +2,27 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavbarElement } from '../../models/navbar-element';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
-import { FormBuilder, FormGroup, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Theme, ThemeSwitcherService } from 'src/app/services/theme-switcher.service';
+import {
+  FormBuilder,
+  FormGroup,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  Theme,
+  ThemeSwitcherService,
+} from 'src/app/services/theme-switcher.service';
 import { map, Subject, takeUntil } from 'rxjs';
-import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-navbar',
-    templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.scss'],
-    standalone: true,
-    imports: [
-        NgIf,
-        RouterLink,
-        NgFor,
-        FormsModule,
-        ReactiveFormsModule,
-        NgClass,
-        AsyncPipe,
-    ],
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
+  standalone: true,
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, NgClass, AsyncPipe],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   searchForm!: FormGroup;
@@ -30,13 +32,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   readonly theme = Theme;
 
-  switcherClasses$ = this.themeSwitcher.getCurrentTheme().pipe(
+  iconClass$ = this.themeSwitcher.getCurrentTheme().pipe(
     map((theme) => {
-      if (theme === Theme.DARK) {
-        return 'bi bi-sun text-body pointer';
-      } else {
-        return 'bi bi-moon text-body pointer';
-      }
+      return theme === Theme.DARK ? 'bi-sun' : 'bi-moon';
     })
   );
 
@@ -83,7 +81,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   isActive(navbarElement: NavbarElement): boolean {
-    return this.router.url.endsWith(navbarElement.route);
+    const url = this.router.url.split('?')?.[0] || this.router.url;
+    return url.endsWith(navbarElement.route);
   }
 
   searchForTerm(): void {
@@ -102,7 +101,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   hasSearchError(): boolean {
     if (this.searchFromElement) {
-      return this.searchFromElement.submitted && this.searchForm.invalid && this.hasFocus;
+      return (
+        this.searchFromElement.submitted &&
+        this.searchForm.invalid &&
+        this.hasFocus
+      );
     } else {
       return false;
     }
@@ -136,12 +139,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQueryParams(): void {
-    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
-      if (params['query']) {
-        this.searchForm.get('search')?.patchValue(params['query']);
-      } else {
-        this.searchForm.get('search')?.patchValue('');
-      }
-    });
+    this.activatedRoute.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        if (params['query']) {
+          this.searchForm.get('search')?.patchValue(params['query']);
+        } else {
+          this.searchForm.get('search')?.patchValue('');
+        }
+      });
   }
 }

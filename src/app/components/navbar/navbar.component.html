@@ -1,37 +1,25 @@
-<nav *ngIf="isLoggedIn()" class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+@if(isLoggedIn()) {
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
   <div class="container-fluid">
-    <a routerLink="/home" class="navbar-brand">
-      Movies
-    </a>
+    <a routerLink="/home" class="navbar-brand"> Movies </a>
 
-    <button
-      (click)="toggleCollapse()"
-      class="navbar-toggler"
-      type="button"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation">
+    <button (click)="toggleCollapse()" class="navbar-toggler" type="button">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div [class.collapse]="isCollapsed" class="navbar-collapse">
       <ul class="navbar-nav mb-2 mb-lg-0 w-100">
-        <li *ngFor="let navbarElement of navbarElements" class="nav-item">
-
-          <a [routerLink]="navbarElement.route"
-            *ngIf="isActive(navbarElement)"
-            class="nav-link active"
-            aria-current="page">
+        @for(navbarElement of navbarElements; track navbarElement.name) {
+        <li class="nav-item">
+          <a
+            [routerLink]="navbarElement.route"
+            [class.active]="isActive(navbarElement)"
+            class="nav-link"
+          >
             {{ navbarElement.name }}
           </a>
-
-          <a [routerLink]="navbarElement.route"
-            *ngIf="!isActive(navbarElement)"
-            class="nav-link">
-            {{ navbarElement.name }}
-          </a>
-
         </li>
+        }
 
         <li class="nav-item py-2 py-lg-0 ps-lg-2">
           <form
@@ -39,9 +27,10 @@
             (ngSubmit)="searchForTerm()"
             #searchFormElement="ngForm"
             class="d-flex"
-            role="search">
+            role="search"
+          >
             <input
-              [ngClass]="{ 'is-invalid': hasSearchError()}"
+              [ngClass]="{ 'is-invalid': hasSearchError() }"
               (focus)="setFocus(true)"
               (blur)="setFocus(false)"
               formControlName="search"
@@ -49,7 +38,7 @@
               class="form-control me-2"
               type="search"
               placeholder="Search"
-              aria-label="Search">
+            />
             <button class="btn btn-outline-success" type="submit">
               Search
             </button>
@@ -57,7 +46,11 @@
         </li>
 
         <li class="nav-item ms-auto py-2 py-lg-0 d-flex align-items-center">
-          <a [ngClass]="switcherClasses$ | async" (click)="toggleDarkMode()"></a>
+          <a
+            [ngClass]="iconClass$ | async"
+            (click)="toggleDarkMode()"
+            class="bi text-body pointer"
+          ></a>
 
           <a class="text-decoration-none text-reset px-2">
             {{ getUsername() }}
@@ -71,3 +64,4 @@
     </div>
   </div>
 </nav>
+}

@@ -6,19 +6,13 @@ import { Movie } from '../../models/movie';
 import { Router } from '@angular/router';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { MovieCardComponent } from '../movie-card/movie-card.component';
-import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-    selector: 'app-movie-list',
-    templateUrl: './movie-list.component.html',
-    styleUrls: ['./movie-list.component.scss'],
-    standalone: true,
-    imports: [
-        NgIf,
-        NgFor,
-        MovieCardComponent,
-        PaginatorComponent,
-    ],
+  selector: 'app-movie-list',
+  templateUrl: './movie-list.component.html',
+  styleUrls: ['./movie-list.component.scss'],
+  standalone: true,
+  imports: [MovieCardComponent, PaginatorComponent],
 })
 export class MovieListComponent implements OnChanges {
   @Input() movieData: Observable<PaginatedMovieResponse>;

@@ -28,7 +28,7 @@
   "html.format.wrapLineLength": 9999,
   "html.format.maxPreserveNewLines": 2,
   "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
   "[javascript]": {
@@ -38,26 +38,6 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
-  },
-  "regexReplaceOnSave.ruleSets": {
-    "html": {
-      "Angular template interpolation padding start": {
-        "find": "{{([^\\s])(.*)}}",
-        "replace": "{{ $1$2}}"
-      },
-      "Angular template interpolation padding end": {
-        "find": "{{(.*)([^\\s])}}",
-        "replace": "{{$1$2 }}"
-      },
-      "Angular template pipe padding start": {
-        "find": "([^\\s|^\\|])\\|",
-        "replace": "$1 |"
-      },
-      "Angular template pipe padding end": {
-        "find": "\\|([^\\s|^\\|])",
-        "replace": "| $1"
-      },
-    }
   },
   "search.exclude": {
     "**/node_modules": true,

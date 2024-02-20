@@ -5,18 +5,13 @@ import { Movie } from 'src/app/models/movie';
 import { MovieService } from 'src/app/services/movie.service';
 import { ReleaseDatePipe } from '../../helpers/release-date.pipe';
 import { DialogComponent } from '../dialog/dialog.component';
-import { NgIf } from '@angular/common';
 
 @Component({
-    selector: 'app-movie-card',
-    templateUrl: './movie-card.component.html',
-    styleUrls: ['./movie-card.component.scss'],
-    standalone: true,
-    imports: [
-        NgIf,
-        DialogComponent,
-        ReleaseDatePipe,
-    ],
+  selector: 'app-movie-card',
+  templateUrl: './movie-card.component.html',
+  styleUrls: ['./movie-card.component.scss'],
+  standalone: true,
+  imports: [DialogComponent, ReleaseDatePipe],
 })
 export class MovieCardComponent implements OnInit {
   @Input() movie!: Movie;

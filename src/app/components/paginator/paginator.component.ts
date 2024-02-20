@@ -1,14 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaginatedMovieResponse } from 'src/app/models/paginated-response';
-import { NgFor } from '@angular/common';
 
 @Component({
-    selector: 'app-paginator',
-    templateUrl: './paginator.component.html',
-    styleUrls: ['./paginator.component.scss'],
-    standalone: true,
-    imports: [NgFor],
+  selector: 'app-paginator',
+  templateUrl: './paginator.component.html',
+  styleUrls: ['./paginator.component.scss'],
+  standalone: true,
 })
 export class PaginatorComponent {
   @Input() currentResponse!: PaginatedMovieResponse;

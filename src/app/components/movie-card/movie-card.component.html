@@ -1,17 +1,18 @@
 <div (click)="dialog.openDialog()" role="button" class="card card-fade h-100">
-
   <div class="card-image">
-
-    <img *ngIf="movie.poster_path"
+    @if(movie.poster_path) {
+    <img
       [src]="movieService.posterBase + movie.poster_path"
       [alt]="movie.original_title"
-      class="card-img-top h-100">
-
-    <img *ngIf="!movie.poster_path"
+      class="card-img-top h-100"
+    />
+    } @else {
+    <img
       src="/assets/images/not-found.jpg"
       alt="not found"
-      class="card-img-top h-100">
-
+      class="card-img-top h-100"
+    />
+    }
   </div>
 
   <div class="card-body">
@@ -19,9 +20,10 @@
     <h6 class="card-subtitle fw-bold">Genres</h6>
     <p class="card-text h-30 overflow-hidden">{{ genreString }}</p>
     <h6 class="card-subtitle fw-bold">Release</h6>
-    <p class="card-text h-15 overflow-hidden">{{ releaseDate | releaseDate: 'yyyy' }}</p>
+    <p class="card-text h-15 overflow-hidden">
+      {{ releaseDate | releaseDate : 'yyyy' }}
+    </p>
   </div>
-
 </div>
 
 <app-dialog #dialog [movieId]="movie.id" />

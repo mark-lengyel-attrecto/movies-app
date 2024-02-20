@@ -4,14 +4,14 @@ import { FormBuilder, FormGroup, NgForm, Validators, FormsModule, ReactiveFormsM
 
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, NgClass, NgIf],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, NgClass],
 })
 export class LoginComponent implements OnInit {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';
