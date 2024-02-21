@@ -1,4 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  WritableSignal,
+  computed,
+  input,
+  signal,
+} from '@angular/core';
 import { map } from 'rxjs';
 import { Genre } from 'src/app/interfaces/genre.interface';
 import { Movie } from 'src/app/interfaces/movie.interface';
@@ -14,19 +21,39 @@ import { DialogComponent } from '../dialog/dialog.component';
   imports: [DialogComponent, ReleaseDatePipe],
 })
 export class MovieCardComponent implements OnInit {
-  @Input() movie!: Movie;
+  movie = input<Movie>();
+  genres: WritableSignal<{ [key: number]: Genre }> = signal({});
 
-  genreString: string = '';
-  releaseDate: string = '';
+  genreString = computed(() => {
+    const genres = this.genres();
+    const movie = this.movie();
+
+    if (!genres || !movie?.genre_ids.length) {
+      return '';
+    } else {
+      let genreStrings: string[] = [];
+
+      movie.genre_ids.forEach((genreId) => {
+        genres[genreId] && genreStrings.push(genres[genreId].name);
+      });
+
+      return genreStrings.join(', ');
+    }
+  });
+
+  releaseDate = computed(() => {
+    return this.movie()?.release_date || '';
+  });
 
   constructor(protected movieService: MovieService) {}
 
   ngOnInit(): void {
-    this.getGenreString();
-    this.getReleaseDate();
+    if (this.movie()) {
+      this.fetchGenres();
+    }
   }
 
-  public getGenreString(): void {
+  private fetchGenres(): void {
     this.movieService
       .getAllGenres()
       .pipe(
@@ -37,26 +64,8 @@ export class MovieCardComponent implements OnInit {
           )
         )
       )
-      .subscribe((allGenres) => {
-        if (!allGenres || this.movie.genre_ids.length === 0) {
-          this.genreString = '';
-        } else {
-          let genreStrings: string[] = [];
-
-          this.movie.genre_ids.forEach((genreId) => {
-            allGenres[genreId] && genreStrings.push(allGenres[genreId].name);
-          });
-
-          this.genreString = genreStrings.join(', ');
-        }
+      .subscribe((genres) => {
+        this.genres.set(genres);
       });
-  }
-
-  public getReleaseDate(): void {
-    if (!this.movie.release_date) {
-      this.releaseDate = '';
-    } else {
-      this.releaseDate = this.movie.release_date;
-    }
   }
 }

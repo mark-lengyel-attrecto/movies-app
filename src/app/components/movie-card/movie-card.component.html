@@ -1,6 +1,6 @@
-@defer(on viewport) {
-<div (click)="dialog.openDialog()" role="button" class="card">
-  <div class="card-image">
+@defer(on viewport) { @if(movie(); as movie) {
+<div (click)="dialog.openDialog()" role="button" class="card clickable">
+  <div class="card-image border-bottom">
     @if(movie.poster_path) {
     <img
       [src]="movieService.posterBase + movie.poster_path"
@@ -16,18 +16,54 @@
     }
   </div>
 
-  <div class="card-body">
-    <h5 class="card-title h-30 overflow-hidden">{{ movie.original_title }}</h5>
-    <h6 class="card-subtitle fw-bold">Genres</h6>
-    <p class="card-text h-30 overflow-hidden">{{ genreString }}</p>
-    <h6 class="card-subtitle fw-bold">Release</h6>
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title h-30 overflow-hidden flex-grow-1">
+      {{ movie.original_title }}
+    </h5>
+    <h6 class="card-subtitle fw-bold mb-1">Genres</h6>
+    <p class="card-text h-30 overflow-hidden">{{ genreString() }}</p>
+    <h6 class="card-subtitle fw-bold mb-1">Release</h6>
     <p class="card-text h-15 overflow-hidden">
-      {{ releaseDate | releaseDate : 'yyyy' }}
+      {{ releaseDate() | releaseDate : 'yyyy' }}
     </p>
   </div>
 </div>
 
 <app-dialog #dialog [movieId]="movie.id" />
-} @placeholder {
+} @else {
+<div class="card">
+  <div
+    class="card-image bg-body-tertiary rounded-top border-bottom loading"
+  ></div>
+
+  <div class="card-body d-flex flex-column loading">
+    <h5
+      class="card-title h-30 overflow-hidden bg-body-tertiary rounded skeleton flex-grow-1 border"
+    >
+      -
+    </h5>
+    <h6
+      class="card-subtitle fw-bold mb-1 bg-body-tertiary rounded skeleton w-25 border"
+    >
+      -
+    </h6>
+    <p
+      class="card-text h-30 overflow-hidden bg-body-tertiary rounded skeleton w-50 border"
+    >
+      -
+    </p>
+    <h6
+      class="card-subtitle fw-bold mb-1 bg-body-tertiary rounded skeleton w-25 border"
+    >
+      -
+    </h6>
+    <p
+      class="card-text h-15 overflow-hidden bg-body-tertiary rounded skeleton w-25 border"
+    >
+      -
+    </p>
+  </div>
+</div>
+} } @placeholder {
 <div role="button" class="card"></div>
 }

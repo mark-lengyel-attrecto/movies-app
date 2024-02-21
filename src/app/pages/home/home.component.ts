@@ -1,46 +1,45 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
-
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  HostBinding,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { MovieService } from '../../services/movie.service';
-import { PaginatedMovieResponse } from '../../interfaces/paginated-response.interface';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MovieListComponent } from '../../components/movie-list/movie-list.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
+  template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./home.component.scss'],
   standalone: true,
   imports: [RouterLink, MovieListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';
 
-  private destroy$ = new Subject<void>();
-
-  movieData: Observable<PaginatedMovieResponse> =
-    new Observable<PaginatedMovieResponse>();
+  movieData$ = signal(this.movieService.getTrending());
 
   constructor(
-    public movieService: MovieService,
-    private activatedRoute: ActivatedRoute
+    private movieService: MovieService,
+    private activatedRoute: ActivatedRoute,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.subscribeToQueryParams();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   private subscribeToQueryParams(): void {
     this.activatedRoute.queryParams
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
-        this.movieData = this.movieService.getTrending(
-          parseInt(params['page'] ?? 1)
+        this.movieData$.set(
+          this.movieService.getTrending(parseInt(params['page']) || 1)
         );
       });
   }

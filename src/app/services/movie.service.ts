@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, connectable, ReplaySubject, Connectable } from 'rxjs';
 
 import { PaginatedMovieResponse } from '../interfaces/paginated-response.interface';
 import { Movie } from '../interfaces/movie.interface';
 
 import { environment } from '../../environments/environment';
 import { GenreResponse } from '../interfaces/genre-response.interface';
+import { Connectable, Observable, ReplaySubject, connectable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,13 +16,13 @@ export class MovieService {
   public posterBaseHighRes: string = environment.movieApi.posterBaseHighRes;
   private language: string = 'en-US';
 
-  private allGenres: Connectable<GenreResponse> | null = null;
+  private genreResponse: Connectable<GenreResponse> | undefined = undefined;
 
   constructor(private http: HttpClient) {}
 
   getAllGenres(): Connectable<GenreResponse> {
-    if (!this.allGenres) {
-      this.allGenres = connectable(
+    if (!this.genreResponse) {
+      this.genreResponse = connectable(
         this.http.get<GenreResponse>(environment.movieApi.genres, {
           params: {
             language: this.language,
@@ -31,10 +31,10 @@ export class MovieService {
         { connector: () => new ReplaySubject(1), resetOnDisconnect: false }
       );
 
-      this.allGenres.connect();
+      this.genreResponse.connect();
     }
 
-    return this.allGenres;
+    return this.genreResponse;
   }
 
   getPopular(page: number = 1): Observable<PaginatedMovieResponse> {

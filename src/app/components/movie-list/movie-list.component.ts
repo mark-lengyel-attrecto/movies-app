@@ -1,65 +1,44 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  HostBinding,
-  Input,
-  OnChanges,
-  SimpleChanges,
+  computed,
+  input,
 } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
-import { Observable, switchMap } from 'rxjs';
-import { PaginatedMovieResponse } from '../../interfaces/paginated-response.interface';
-import { Movie } from '../../interfaces/movie.interface';
-import { Router } from '@angular/router';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { MovieCardComponent } from '../movie-card/movie-card.component';
+import { startWith } from 'rxjs';
+import { Movie } from 'src/app/interfaces/movie.interface';
+import { ActivatedRoute } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-movie-list',
   templateUrl: './movie-list.component.html',
-  styleUrls: ['./movie-list.component.scss'],
+  styleUrl: './movie-list.component.scss',
   standalone: true,
-  imports: [MovieCardComponent, PaginatorComponent],
+  imports: [AsyncPipe, MovieCardComponent, PaginatorComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MovieListComponent implements OnChanges {
-  @Input() movieData: Observable<PaginatedMovieResponse>;
+export class MovieListComponent {
+  movieData$ = input(this.movieService.getPopular());
 
-  @HostBinding('class') hostClass = 'h-100';
+  movieDataWithSkeleton$ = computed(() => {
+    const pageParam =
+      parseInt(this.activatedRoute.snapshot.queryParams['page']) || 1;
 
-  currentResponse: PaginatedMovieResponse = {
-    page: 0,
-    results: [],
-    total_pages: 0,
-    total_results: 0,
-  };
-  isLoading: boolean = true;
+    return this.movieData$().pipe(
+      startWith({
+        page: pageParam,
+        results: Array<Movie>(20),
+        total_pages: pageParam + 10,
+        total_results: 20,
+      })
+    );
+  });
 
-  constructor(public movieService: MovieService, private router: Router) {
-    this.movieData = movieService
-      .getAllGenres()
-      .pipe(switchMap(() => movieService.getPopular()));
-  }
-
-  getResponseData(): void {
-    this.isLoading = true;
-    this.movieData.subscribe((response) => {
-      this.currentResponse = response;
-      this.isLoading = false;
-    });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['movieData'].previousValue !== changes['movieData'].currentValue
-    ) {
-      this.getResponseData();
-    }
-  }
-
-  public get movies(): Movie[] {
-    return this.currentResponse.results;
-  }
-
-  onSearchPage(): boolean {
-    return this.router.url.split('?')[0].endsWith('/search');
-  }
+  constructor(
+    private movieService: MovieService,
+    private activatedRoute: ActivatedRoute
+  ) {}
 }

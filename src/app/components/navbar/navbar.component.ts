@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavbarElement } from '../../interfaces/navbar-element.interface';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -14,7 +15,7 @@ import {
   Theme,
   ThemeSwitcherService,
 } from 'src/app/services/theme-switcher.service';
-import { map, Subject, takeUntil } from 'rxjs';
+import { map } from 'rxjs';
 import { NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
@@ -24,11 +25,9 @@ import { NgClass, AsyncPipe } from '@angular/common';
   standalone: true,
   imports: [RouterLink, FormsModule, ReactiveFormsModule, NgClass, AsyncPipe],
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit {
   searchForm!: FormGroup;
   @ViewChild('searchFormElement') searchFromElement!: NgForm;
-
-  private destroy$ = new Subject<void>();
 
   readonly theme = Theme;
 
@@ -48,7 +47,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private themeSwitcher: ThemeSwitcherService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private destroyRef: DestroyRef
   ) {
     this.navbarElements = [
       { name: 'Home', route: '/home' },
@@ -69,11 +69,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.searchFromElement = new NgForm([], []);
 
     this.subscribeToQueryParams();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   isLoggedIn(): boolean {
@@ -140,7 +135,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   private subscribeToQueryParams(): void {
     this.activatedRoute.queryParams
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['query']) {
           this.searchForm.get('search')?.patchValue(params['query']);

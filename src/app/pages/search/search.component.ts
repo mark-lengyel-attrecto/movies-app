@@ -1,52 +1,50 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
-
+import {
+  Component,
+  DestroyRef,
+  HostBinding,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MovieService } from '../../services/movie.service';
-import { PaginatedMovieResponse } from '../../interfaces/paginated-response.interface';
-
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MovieListComponent } from '../../components/movie-list/movie-list.component';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-search',
-  templateUrl: './search.component.html',
+  template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./search.component.scss'],
   standalone: true,
   imports: [RouterLink, MovieListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class SearchComponent implements OnInit {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';
 
-  private destroy$ = new Subject<void>();
-
-  movieData: Observable<PaginatedMovieResponse> =
-    new Observable<PaginatedMovieResponse>();
+  movieData$ = signal(this.movieService.getPopular());
 
   constructor(
-    public movieService: MovieService,
-    private activatedRoute: ActivatedRoute
+    private movieService: MovieService,
+    private activatedRoute: ActivatedRoute,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.subscribeToQueryParams();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   private subscribeToQueryParams(): void {
     this.activatedRoute.queryParams
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['query']) {
-          this.movieData = this.movieService.search(
-            params['query'],
-            parseInt(params['page'] ?? 1)
+          this.movieData$.set(
+            this.movieService.search(
+              params['query'],
+              parseInt(params['page']) || 1
+            )
           );
-        } else {
-          this.movieData = this.movieService.getPopular();
         }
       });
   }

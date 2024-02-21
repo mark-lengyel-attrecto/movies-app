@@ -1,46 +1,46 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  HostBinding,
+  OnInit,
+  signal,
+} from '@angular/core';
 
 import { MovieService } from '../../services/movie.service';
-import { PaginatedMovieResponse } from '../../interfaces/paginated-response.interface';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MovieListComponent } from '../../components/movie-list/movie-list.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-popular',
-  templateUrl: './popular.component.html',
+  template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./popular.component.scss'],
   standalone: true,
   imports: [RouterLink, MovieListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopularComponent implements OnInit, OnDestroy {
+export class PopularComponent implements OnInit {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';
 
-  private destroy$ = new Subject<void>();
-
-  movieData: Observable<PaginatedMovieResponse> =
-    new Observable<PaginatedMovieResponse>();
+  movieData$ = signal(this.movieService.getPopular());
 
   constructor(
-    public movieService: MovieService,
-    private activatedRoute: ActivatedRoute
+    private movieService: MovieService,
+    private activatedRoute: ActivatedRoute,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.subscribeToQueryParams();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   private subscribeToQueryParams(): void {
     this.activatedRoute.queryParams
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
-        this.movieData = this.movieService.getPopular(
-          parseInt(params['page'] ?? 1)
+        this.movieData$.set(
+          this.movieService.getPopular(parseInt(params['page']) || 1)
         );
       });
   }

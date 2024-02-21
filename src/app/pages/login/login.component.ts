@@ -1,6 +1,13 @@
 import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -16,7 +23,8 @@ import { NgClass } from '@angular/common';
 export class LoginComponent implements OnInit {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';
 
-  @ViewChild('loginFormElement') loginFormElement!: NgForm;
+  @ViewChild('loginFormElement', { static: true }) loginFormElement =
+    new NgForm([], []);
 
   loginForm!: FormGroup;
   loading: boolean = false;
@@ -28,6 +36,21 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService
   ) {}
+
+  ngOnInit(): void {
+    this.loginForm = this.formBuilder.group({
+      username: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{6,}$'
+          ),
+        ],
+      ],
+    });
+  }
 
   hasError(formControlName: string, errorType: string | null = null): boolean {
     if (errorType != null) {
@@ -45,20 +68,16 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{6,}$')]],
-    });
-  }
-
   onSubmit(): void {
     if (this.loginForm.invalid) {
       return;
     } else {
       this.loading = true;
       this.authenticationService
-        .login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value)
+        .login(
+          this.loginForm.get('username')?.value,
+          this.loginForm.get('password')?.value
+        )
         .subscribe({
           next: () => {
             this.router.navigate([this.returnUrl]);

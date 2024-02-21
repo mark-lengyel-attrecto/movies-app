@@ -9,7 +9,7 @@ import { PaginatedMovieResponse } from 'src/app/interfaces/paginated-response.in
   standalone: true,
 })
 export class PaginatorComponent {
-  @Input() currentResponse!: PaginatedMovieResponse;
+  @Input({ required: true }) movieData!: PaginatedMovieResponse;
 
   paginatorSize: number = 5;
 
@@ -18,8 +18,8 @@ export class PaginatorComponent {
   jumpToPage(page: number): void {
     if (
       page < 1 ||
-      page > this.currentResponse.total_pages ||
-      page === this.currentResponse.page
+      page > this.movieData.total_pages ||
+      page === this.movieData.page
     ) {
       return;
     } else {
@@ -34,9 +34,9 @@ export class PaginatorComponent {
   }
 
   getPaginatorRange(): number[] {
-    const totalPages = this.currentResponse.total_pages;
-    let start = this.currentResponse.page - Math.floor(this.paginatorSize / 2);
-    let end = this.currentResponse.page + Math.floor(this.paginatorSize / 2);
+    const totalPages = this.movieData.total_pages;
+    let start = this.movieData.page - Math.floor(this.paginatorSize / 2);
+    let end = this.movieData.page + Math.floor(this.paginatorSize / 2);
 
     if (totalPages <= this.paginatorSize) {
       start = 1;
@@ -58,6 +58,6 @@ export class PaginatorComponent {
   }
 
   isCurrentPage(page: number) {
-    return page === this.currentResponse.page;
+    return page === this.movieData?.page;
   }
 }

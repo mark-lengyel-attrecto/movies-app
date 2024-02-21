@@ -10,9 +10,12 @@ export enum Theme {
   providedIn: 'root',
 })
 export class ThemeSwitcherService {
-  private currentTheme$: BehaviorSubject<Theme> = new BehaviorSubject<Theme>(Theme.DARK);
+  private currentTheme$: BehaviorSubject<Theme> = new BehaviorSubject<Theme>(
+    Theme.DARK
+  );
 
   constructor() {
+    this.fetchLocalStorage();
     this.updateHtmlAttribute();
   }
 
@@ -30,7 +33,17 @@ export class ThemeSwitcherService {
     this.updateHtmlAttribute();
   }
 
+  private fetchLocalStorage(): void {
+    const theme = localStorage.getItem('theme') as Theme;
+    if (theme) {
+      this.currentTheme$.next(theme);
+    }
+  }
+
   private updateHtmlAttribute(): void {
-    document.querySelector('html')?.setAttribute('data-bs-theme', this.currentTheme$.value);
+    document
+      .querySelector('html')
+      ?.setAttribute('data-bs-theme', this.currentTheme$.value);
+    localStorage.setItem('theme', this.currentTheme$.value);
   }
 }

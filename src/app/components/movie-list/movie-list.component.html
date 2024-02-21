@@ -1,34 +1,25 @@
-@if(!isLoading) { @if(movies.length !== 0) {
+@if(movieDataWithSkeleton$() | async; as movieData) {
 
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column justify-content-between h-100">
   <div class="flex-shrink-1 overflow-auto">
-    @if(onSearchPage()) {
-    <h1 class="d-flex justify-content-center m-3 mb-1">
-      {{ currentResponse.total_results }} search result(s)
-    </h1>
-    }
-
     <div
       class="row row-cols-1 row-cols-lg-5 row-cols-md-3 row-cols-sm-2 m-0 pb-3"
     >
-      @for(movie of movies; track movie.id) {
+      @for(movie of movieData.results; track movie?.id) {
+
       <div class="col pt-3">
         <app-movie-card [movie]="movie" />
       </div>
+
+      } @empty {
+
+      <h1 class="d-flex justify-content-center m-3 flex-grow-1">No results!</h1>
+
       }
     </div>
   </div>
 
-  <app-paginator [currentResponse]="currentResponse" />
-</div>
-
-} @else {
-<h1 class="d-flex justify-content-center m-3">No results!</h1>
-} } @else {
-
-<!-- LOADER -->
-<div class="d-flex justify-content-center align-items-center h-100">
-  <span class="spinner-border"></span>
+  <app-paginator [movieData]="movieData" />
 </div>
 
 }

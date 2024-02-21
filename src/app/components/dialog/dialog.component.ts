@@ -4,6 +4,9 @@ import {
   ElementRef,
   Input,
   ViewChild,
+  WritableSignal,
+  computed,
+  signal,
 } from '@angular/core';
 import { Movie } from '../../interfaces/movie.interface';
 import { MovieService } from '../../services/movie.service';
@@ -12,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { Genre } from '../../interfaces/genre.interface';
 import * as bootstrap from 'bootstrap';
 import { ReleaseDatePipe } from '../../pipes/release-date.pipe';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-dialog',
@@ -19,16 +23,54 @@ import { ReleaseDatePipe } from '../../pipes/release-date.pipe';
   styleUrls: ['./dialog.component.scss'],
   standalone: true,
   imports: [ReleaseDatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent implements AfterViewInit {
-  @Input() movieId: number | null = null;
+  @Input() movieId: number | undefined = undefined;
 
   @ViewChild('modal') modalElement!: ElementRef;
 
   readonly baseUrl: string = this.movieService.posterBaseHighRes;
 
   modal!: bootstrap.Modal;
-  movieData: Movie | null = null;
+  movie: WritableSignal<Movie | undefined> = signal(undefined);
+
+  imdbLink = computed(() => {
+    if (environment.imdbBaseUrl && this.movie()?.imdb_id) {
+      return `${environment.imdbBaseUrl}/${this.movie()?.imdb_id}`;
+    } else {
+      return '';
+    }
+  });
+
+  genreString = computed(() =>
+    this.getListString<Genre>(this.movie()?.genres || [], 'name')
+  );
+
+  releaseYear = computed(() => this.movie()?.release_date || '');
+
+  lengthString = computed(() => {
+    const runtime = this.movie()?.runtime || 0;
+    const hour = Math.floor(runtime / 60);
+    const minute = runtime - hour * 60;
+
+    let lengthString: string;
+
+    if (hour > 0) {
+      lengthString = `${hour} hour ${minute} minute`;
+    } else {
+      lengthString = `${minute} minute`;
+    }
+
+    return lengthString;
+  });
+
+  movieCountries = computed(() =>
+    this.getListString<{ iso_3166_1: string; name: string }>(
+      this.movie()?.production_countries || [],
+      'name'
+    )
+  );
 
   constructor(private movieService: MovieService) {}
 
@@ -45,52 +87,22 @@ export class DialogComponent implements AfterViewInit {
     this.modal.hide();
   }
 
-  fetchMovieData(): void {
+  private fetchMovieData(): void {
     if (!this.movieId) {
       return;
     }
 
     this.movieService.getMovieById(this.movieId).subscribe({
       next: (movie) => {
-        this.movieData = movie;
+        this.movie.set(movie);
       },
       error: () => {
-        this.movieData = null;
+        this.movie.set(undefined);
       },
     });
   }
 
-  getGenreString(movieData: Movie): string {
-    return this.getListString<Genre>(movieData.genres, 'name');
-  }
-
-  getReleaseYear(movieData: Movie): string {
-    return movieData.release_date;
-  }
-
-  getLengthString(movieData: Movie): string {
-    const hour = Math.floor(movieData.runtime / 60);
-    const minute = movieData.runtime - hour * 60;
-
-    let lengthString: string;
-
-    if (hour > 0) {
-      lengthString = `${hour} hour ${minute} minute`;
-    } else {
-      lengthString = `${minute} minute`;
-    }
-
-    return lengthString;
-  }
-
-  getMovieCountries(movieData: Movie): string {
-    return this.getListString<{ iso_3166_1: string; name: string }>(
-      movieData.production_countries,
-      'name'
-    );
-  }
-
-  getListString<ModelType>(
+  private getListString<ModelType>(
     list: ModelType[],
     propertyName: Extract<keyof ModelType, string>
   ) {
@@ -110,9 +122,5 @@ export class DialogComponent implements AfterViewInit {
       },
       ''
     );
-  }
-
-  getIMDBLink(movieData: Movie): string {
-    return `${environment.imdbBaseUrl}/${movieData.imdb_id}`;
   }
 }

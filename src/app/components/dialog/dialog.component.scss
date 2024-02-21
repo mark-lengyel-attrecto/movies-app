@@ -1,0 +1,26 @@
+@import 'bootstrap/scss/bootstrap-utilities';
+
+:host {
+  .skeleton {
+    color: transparent;
+    user-select: none;
+  }
+
+  .loading {
+    background: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(var(--bs-body-color-rgb), .1) 50%,
+      rgba(255, 255, 255, 0) 60%
+    );
+    background-size: 200% 100%;
+    background-position-x: 180%;
+    animation: 1s loading ease-in-out infinite;
+  }
+
+  @keyframes loading {
+    to {
+      background-position-x: -20%;
+    }
+  }
+}
