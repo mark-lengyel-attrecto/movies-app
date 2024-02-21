@@ -38,7 +38,7 @@ export class MovieCardComponent implements OnInit {
         )
       )
       .subscribe((allGenres) => {
-        if (!allGenres || this.movie.genre_ids.length === 0) {
+        if (!allGenres || !this.movie?.genre_ids.length) {
           this.genreString = '';
         } else {
           let genreStrings: string[] = [];
@@ -53,7 +53,7 @@ export class MovieCardComponent implements OnInit {
   }
 
   public getReleaseDate(): void {
-    if (!this.movie.release_date) {
+    if (!this.movie?.release_date) {
       this.releaseDate = '';
     } else {
       this.releaseDate = this.movie.release_date;

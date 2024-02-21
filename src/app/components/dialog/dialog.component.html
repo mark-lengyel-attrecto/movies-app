@@ -1,7 +1,7 @@
 <div #modal class="modal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <!-- CONTENT -->
-    @if(movieData) {
+    @defer(when movieData) { @if(movieData) {
 
     <div class="modal-content">
       <!-- HEADER -->
@@ -10,7 +10,7 @@
         <button
           (click)="closeDialog()"
           type="button"
-          class="btn-close"
+          class="btn-close border-0"
           data-bs-dismiss="modal"
         ></button>
       </div>
@@ -18,18 +18,23 @@
       <!-- BODY -->
       <div class="modal-body my-2">
         @if(movieData.backdrop_path) {
-        <img
-          [src]="baseUrl + movieData.backdrop_path"
-          [alt]="movieData.original_title"
-          class="rounded w-100 mb-4"
-        />
+        <div class="w-100 mb-4 ratio ratio-16x9 border rounded">
+          <img
+            #backdropImage
+            [src]="baseUrl + movieData.backdrop_path"
+            [alt]="movieData.original_title"
+            class="rounded w-100"
+          />
+        </div>
         }
 
         <div class="card bg-body-tertiary mb-4">
           <div class="card-body">
             <h5 class="card-title">Overview</h5>
             <p class="card-text">{{ movieData.overview }}</p>
-            <a [href]="getIMDBLink(movieData)" target="_blank">IMDB page</a>
+            @if(getIMDBLink(movieData); as imdbLink) {
+            <a [href]="imdbLink" target="_blank">IMDB page</a>
+            }
           </div>
         </div>
 
@@ -87,11 +92,97 @@
       </div>
     </div>
 
-    } @else {
+    } } @placeholder {
 
-    <!-- LOADER -->
-    <div class="modal-content align-items-center">
-      <span class="spinner-border my-5"></span>
+    <div class="modal-content">
+      <!-- SKELETON HEADER -->
+      <div class="modal-header">
+        <h3
+          class="modal-title skeleton bg-body-tertiary rounded w-50 loading border"
+        >
+          -
+        </h3>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          disabled
+        ></button>
+      </div>
+
+      <!-- SKELETON BODY -->
+      <div class="modal-body my-2">
+        <div
+          class="rounded w-100 mb-4 ratio ratio-16x9 bg-body-tertiary loading border"
+        ></div>
+
+        <div class="card bg-body-tertiary mb-4 loading">
+          <div class="card-body">
+            <h5 class="card-title skeleton bg-body rounded w-50 border">-</h5>
+            <p class="card-text skeleton bg-body rounded w-25 border">-</p>
+            <a class="skeleton bg-body rounded border">IMDB page</a>
+          </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          <div class="col">
+            <div class="card bg-body-tertiary mb-3 h-100 loading">
+              <div class="card-body">
+                <h5 class="card-title skeleton bg-body rounded w-50 border">
+                  Genres
+                </h5>
+                <p class="card-text skeleton bg-body rounded w-25 border">-</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card bg-body-tertiary mb-3 h-100 loading">
+              <div class="card-body">
+                <h5 class="card-title skeleton bg-body rounded w-50 border">
+                  Release
+                </h5>
+                <p class="card-text skeleton bg-body rounded w-25 border">-</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card bg-body-tertiary mb-3 h-100 loading">
+              <div class="card-body">
+                <h5 class="card-title skeleton bg-body rounded w-50 border">
+                  Length
+                </h5>
+                <p class="card-text skeleton bg-body rounded w-25 border">-</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card bg-body-tertiary mb-3 h-100 loading">
+              <div class="card-body">
+                <h5 class="card-title skeleton bg-body rounded w-50 border">
+                  Countries
+                </h5>
+                <p class="card-text skeleton bg-body rounded w-25 border">-</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKELETON FOOTER -->
+      <div class="modal-footer">
+        <button
+          (click)="closeDialog()"
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          disabled
+        >
+          Close
+        </button>
+      </div>
     </div>
 
     }

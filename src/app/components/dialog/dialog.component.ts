@@ -113,6 +113,10 @@ export class DialogComponent implements AfterViewInit {
   }
 
   getIMDBLink(movieData: Movie): string {
-    return `${environment.imdbBaseUrl}/${movieData.imdb_id}`;
+    if (environment.imdbBaseUrl && movieData.imdb_id) {
+      return `${environment.imdbBaseUrl}/${movieData.imdb_id}`;
+    } else {
+      return '';
+    }
   }
 }
