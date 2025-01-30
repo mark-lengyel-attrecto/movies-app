@@ -3,7 +3,7 @@
   <div class="card-image border-bottom">
     @if(movie.poster_path) {
     <img
-      [src]="movieService.posterBase + movie.poster_path"
+      [src]="posterUrl()"
       [alt]="movie.original_title"
       class="card-img-top h-100"
     />

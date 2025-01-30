@@ -1,13 +1,13 @@
 @if(movieDataWithSkeleton$() | async; as movieData) {
 
 <div class="d-flex flex-column justify-content-between h-100">
-  <div class="flex-shrink-1 overflow-auto">
+  <div class="flex-shrink-1 overflow-auto d-flex justify-content-center">
     <div
-      class="row row-cols-1 row-cols-lg-5 row-cols-md-3 row-cols-sm-2 m-0 pb-3"
+      class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 w-100 m-0 g-3 mb-3"
     >
       @for(movie of movieData.results; track movie?.id) {
 
-      <div class="col pt-3">
+      <div class="col">
         <app-movie-card [movie]="movie" />
       </div>
 

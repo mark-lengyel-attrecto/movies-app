@@ -3,7 +3,7 @@
   --scrollbar-thumb-padding: 2px;
 }
 
-/* width */
+/* Width */
 ::-webkit-scrollbar {
   width: var(--scrollbar-width);
 }
@@ -16,11 +16,11 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: black;
+  background: var(--bs-secondary-color);
   border-radius: calc(var(--scrollbar-width) / 2);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: grey;
+  background: var(--bs-body-color);
 }

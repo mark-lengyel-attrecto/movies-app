@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, ViewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavbarElement } from '../../interfaces/navbar-element.interface';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -15,7 +15,7 @@ import {
   Theme,
   ThemeSwitcherService,
 } from 'src/app/services/theme-switcher.service';
-import { map } from 'rxjs';
+import { finalize, map } from 'rxjs';
 import { NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
@@ -37,8 +37,13 @@ export class NavbarComponent implements OnInit {
     })
   );
 
+  isLoggedIn = toSignal(
+    this.authenticationService.user.pipe(map((user) => !!user))
+  );
+
   navbarElements: NavbarElement[];
   hasFocus: boolean = false;
+  loggingOut: boolean = false;
 
   private collapsed: boolean = true;
 
@@ -69,10 +74,6 @@ export class NavbarComponent implements OnInit {
     this.searchFromElement = new NgForm([], []);
 
     this.subscribeToQueryParams();
-  }
-
-  isLoggedIn(): boolean {
-    return this.authenticationService.currentUserValue !== null;
   }
 
   isActive(navbarElement: NavbarElement): boolean {
@@ -108,17 +109,15 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.searchForm.get('search')?.setValue('');
-    this.authenticationService.logout();
+    this.loggingOut = true;
+    this.authenticationService
+      .logout()
+      .pipe(finalize(() => (this.loggingOut = false)))
+      .subscribe(() => this.router.navigate(['/login']));
   }
 
   getUsername(): string {
-    const user = this.authenticationService.getUser();
-
-    if (user) {
-      return user.username;
-    } else {
-      return '';
-    }
+    return this.authenticationService.user.value?.username || '';
   }
 
   setFocus(setting: boolean): void {

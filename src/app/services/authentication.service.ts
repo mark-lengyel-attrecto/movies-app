@@ -1,59 +1,149 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { User } from 'src/app/interfaces/user.interface';
-import { Router } from '@angular/router';
+import { RequestToken } from '../interfaces/request-token.interface';
+import { Session } from '../interfaces/session.interface';
+import { User } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser: Observable<User | null>;
+  private baseUrl = environment.movieApi.baseUrl;
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<User | null>(this.getUser());
-    this.currentUser = this.currentUserSubject.asObservable();
-  }
+  user = new BehaviorSubject<User | null>(null);
+  initialized$ = new BehaviorSubject(false);
 
-  public get currentUserValue(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  private saveUser(user: User): void {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  }
-
-  getUser(): User | null {
-    const localStorageUser = localStorage.getItem('currentUser');
-    if (localStorageUser) {
-      return JSON.parse(localStorageUser);
+  constructor(private http: HttpClient) {
+    const sessionId = localStorage.getItem('session_id');
+    if (sessionId) {
+      this.getAccount(sessionId).subscribe((user) => {
+        this.user.next(user);
+        this.initialized$.next(true);
+      });
+    } else {
+      this.logout().subscribe(() => {
+        this.initialized$.next(true);
+      });
     }
-    return null;
   }
 
-  login(username: string, password: string): Observable<User> {
+  private createRequestToken(): Observable<string> {
     return this.http
-      .post<User>(`${environment.emailApiUrl}/users/authenticate`, {
-        username,
-        password,
-      })
+      .get<RequestToken>(`${this.baseUrl}/authentication/token/new`)
       .pipe(
-        map((user) => {
-          user.authdata = window.btoa(username + ':' + password);
-          this.saveUser(user);
-          this.currentUserSubject.next(user);
-          return user;
-        })
+        map(({ request_token }) => request_token || ''),
+        catchError((error) =>
+          throwError(() => {
+            console.error(error);
+            return new Error('Token request failed.');
+          })
+        )
       );
   }
 
-  logout() {
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
+  private validateWithLogin(
+    username: string,
+    password: string,
+    requestToken: string
+  ): Observable<string> {
+    return this.http
+      .post<RequestToken>(
+        `${this.baseUrl}/authentication/token/validate_with_login`,
+        {
+          username,
+          password,
+          request_token: requestToken,
+        }
+      )
+      .pipe(
+        map(({ request_token }) => request_token || ''),
+        catchError((error) =>
+          throwError(() => {
+            console.error(error);
+            return new Error('Login validation failed.');
+          })
+        )
+      );
+  }
+
+  private createSession(validatedToken: string) {
+    return this.http
+      .post<Session>(`${this.baseUrl}/authentication/session/new`, {
+        request_token: validatedToken,
+      })
+      .pipe(
+        catchError((error) =>
+          throwError(() => {
+            console.error(error);
+            return new Error('Session creation failed.');
+          })
+        )
+      );
+  }
+
+  private getAccount(sessionId: string): Observable<User> {
+    return this.http
+      .get<User>(`${this.baseUrl}/account`, {
+        params: {
+          session_id: sessionId,
+        },
+      })
+      .pipe(
+        catchError((error) =>
+          throwError(() => {
+            console.error(error);
+            return new Error('Invalid session ID.');
+          })
+        )
+      );
+  }
+
+  private deleteSession(sessionId: string): Observable<unknown> {
+    return this.http
+      .delete(`${this.baseUrl}/authentication/session`, {
+        body: {
+          session_id: sessionId,
+        },
+      })
+      .pipe(
+        catchError((error) =>
+          throwError(() => {
+            console.error(error);
+            return new Error('Session deletion failed.');
+          })
+        )
+      );
+  }
+
+  login(username: string, password: string): Observable<User> {
+    return this.createRequestToken().pipe(
+      switchMap((requestToken) =>
+        this.validateWithLogin(username, password, requestToken)
+      ),
+      switchMap((validatedToken) => this.createSession(validatedToken)),
+      map((session) => {
+        localStorage.setItem('session_id', session.session_id);
+        return session.session_id;
+      }),
+      switchMap((sessionId) => this.getAccount(sessionId)),
+      tap((user) => {
+        this.user.next(user);
+      }),
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  logout(): Observable<unknown> {
+    const sessionId = localStorage.getItem('session_id');
+
+    return (sessionId ? this.deleteSession(sessionId) : of(null)).pipe(
+      tap(() => {
+        localStorage.removeItem('session_id');
+        this.user.next(null);
+      })
+    );
   }
 }

@@ -1,8 +1,8 @@
 @import 'bootstrap/scss/bootstrap-utilities';
+@import 'bootstrap/scss/_variables';
 
 :host {
-  .spinner-border {
-    --#{$prefix}spinner-height: 4rem;
-    --#{$prefix}spinner-width: 4rem;
+  .row {
+    max-width: map-get($grid-breakpoints, 'xl');
   }
 }

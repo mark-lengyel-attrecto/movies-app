@@ -1,11 +1,16 @@
 @import 'bootstrap/scss/bootstrap-utilities';
+@import 'bootstrap/scss/_variables';
 
 :host {
-  .form-control {
-    width: 15rem;
+  .container-fluid {
+    max-width: map-get($grid-breakpoints, 'xl');
 
-    @include media-breakpoint-down(lg) {
-      width: 100%;
+    .form-control {
+      width: 15rem;
+
+      @include media-breakpoint-down(lg) {
+        width: 100%;
+      }
     }
   }
 }

@@ -4,10 +4,7 @@ import { AppComponent } from './app/app.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { FakeBackendInterceptor } from './app/interceptors/fake-backend.interceptor';
 import { ApiKeyInterceptor } from './app/interceptors/api-key.interceptor';
-import { ErrorInterceptor } from './app/interceptors/error.interceptor';
-import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import {
   HTTP_INTERCEPTORS,
   withInterceptorsFromDi,
@@ -20,7 +17,8 @@ import {
   withDebugTracing,
   withPreloading,
 } from '@angular/router';
-import { AuthGuard } from './app/auth/auth.guard';
+import { AuthGuard } from './app/guards/auth.guard';
+import { LoginGuard } from './app/guards/login.guard';
 
 export const routes: Route[] = [
   {
@@ -29,7 +27,7 @@ export const routes: Route[] = [
       import('./app/pages/login/login.component').then(
         (mod) => mod.LoginComponent
       ),
-    canActivate: [AuthGuard],
+    canActivate: [LoginGuard],
   },
   {
     path: 'home',
@@ -74,19 +72,8 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule, FormsModule, ReactiveFormsModule),
     provideHttpClient(withInterceptorsFromDi()),
-    provideRouter(
-      routes,
-      withPreloading(PreloadAllModules),
-      withDebugTracing()
-    ),
+    provideRouter(routes, withPreloading(PreloadAllModules)),
     provideAnimations(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: FakeBackendInterceptor,
-      multi: true,
-    },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ApiKeyInterceptor, multi: true },
   ],
 }).catch((err) => console.error(err));

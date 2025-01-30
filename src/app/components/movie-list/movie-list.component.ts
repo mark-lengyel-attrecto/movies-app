@@ -11,6 +11,7 @@ import { startWith } from 'rxjs';
 import { Movie } from 'src/app/interfaces/movie.interface';
 import { ActivatedRoute } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
+import { PAGE_SIZE } from 'src/app/configs/app.config';
 
 @Component({
   selector: 'app-movie-list',
@@ -30,9 +31,9 @@ export class MovieListComponent {
     return this.movieData$().pipe(
       startWith({
         page: pageParam,
-        results: Array<Movie>(20),
+        results: Array<Movie>(PAGE_SIZE),
         total_pages: pageParam + 10,
-        total_results: 20,
+        total_results: PAGE_SIZE,
       })
     );
   });

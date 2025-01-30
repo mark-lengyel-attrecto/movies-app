@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 
 import { MovieService } from '../../services/movie.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MovieListComponent } from '../../components/movie-list/movie-list.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -17,7 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./popular.component.scss'],
   standalone: true,
-  imports: [RouterLink, MovieListComponent],
+  imports: [MovieListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopularComponent implements OnInit {

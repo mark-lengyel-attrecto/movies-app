@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MovieService } from '../../services/movie.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MovieListComponent } from '../../components/movie-list/movie-list.component';
 import { ChangeDetectionStrategy } from '@angular/core';
 
@@ -16,7 +16,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
   template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./search.component.scss'],
   standalone: true,
-  imports: [RouterLink, MovieListComponent],
+  imports: [MovieListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent implements OnInit {

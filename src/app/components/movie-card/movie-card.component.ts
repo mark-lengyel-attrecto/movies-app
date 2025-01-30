@@ -45,6 +45,12 @@ export class MovieCardComponent implements OnInit {
     return this.movie()?.release_date || '';
   });
 
+  posterUrl = computed(() => {
+    return `${this.movieService.getPosterUrl('w200')}${
+      this.movie()?.poster_path
+    }`;
+  });
+
   constructor(protected movieService: MovieService) {}
 
   ngOnInit(): void {

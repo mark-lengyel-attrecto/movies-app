@@ -1,5 +1,5 @@
 import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -10,7 +10,6 @@ import {
 } from '@angular/forms';
 
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -18,7 +17,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, NgClass],
+  imports: [FormsModule, ReactiveFormsModule, NgClass],
 })
 export class LoginComponent implements OnInit {
   @HostBinding('class') hostClasses = 'overflow-auto flex-grow-1';
@@ -28,7 +27,7 @@ export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
   loading: boolean = false;
-  returnUrl: string = '';
+  returnUrl: string = '/home';
   error = '';
 
   constructor(
@@ -39,16 +38,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(
-            '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{6,}$'
-          ),
-        ],
-      ],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
     });
   }
 
@@ -82,15 +73,9 @@ export class LoginComponent implements OnInit {
           next: () => {
             this.router.navigate([this.returnUrl]);
           },
-          error: (error: HttpErrorResponse) => {
+          error: (error) => {
             this.loading = false;
-            switch (error.status) {
-              case 404:
-                this.error = 'Wrong username or password!';
-                break;
-              default:
-                this.error = error.message;
-            }
+            this.error = error.message;
           },
         });
     }

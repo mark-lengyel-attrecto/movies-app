@@ -57,8 +57,15 @@
             {{ getUsername() }}
           </a>
 
-          <button (click)="logout()" class="btn btn-danger" type="button">
-            Logout
+          <button
+            [disabled]="loggingOut"
+            (click)="logout()"
+            class="btn btn-danger"
+            type="button"
+          >
+            @if(loggingOut) {
+            <span class="spinner-border spinner-border-sm mr-1"></span>
+            } Logout
           </button>
         </li>
       </ul>

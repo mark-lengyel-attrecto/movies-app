@@ -21,7 +21,7 @@
         <div class="w-100 mb-4 ratio ratio-16x9 border rounded">
           <img
             #backdropImage
-            [src]="baseUrl + movie.backdrop_path"
+            [src]="backdropUrl()"
             [alt]="movie.original_title"
             class="rounded w-100"
           />

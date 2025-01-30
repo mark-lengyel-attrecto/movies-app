@@ -12,18 +12,25 @@ import { Connectable, Observable, ReplaySubject, connectable } from 'rxjs';
   providedIn: 'root',
 })
 export class MovieService {
-  public posterBase: string = environment.movieApi.posterBase;
-  public posterBaseHighRes: string = environment.movieApi.posterBaseHighRes;
+  private baseUrl = environment.movieApi.baseUrl;
   private language: string = 'en-US';
 
   private genreResponse: Connectable<GenreResponse> | undefined = undefined;
 
   constructor(private http: HttpClient) {}
 
+  getPosterUrl(resolution = 'w200'): string {
+    return `${environment.movieApi.imageBaseUrl}/t/p/${resolution}`;
+  }
+
+  getImdbUrl(imdbId: string) {
+    return `${environment.imdbBaseUrl}/title/${imdbId}`;
+  }
+
   getAllGenres(): Connectable<GenreResponse> {
     if (!this.genreResponse) {
       this.genreResponse = connectable(
-        this.http.get<GenreResponse>(environment.movieApi.genres, {
+        this.http.get<GenreResponse>(`${this.baseUrl}/genre/movie/list`, {
           params: {
             language: this.language,
           },
@@ -38,17 +45,20 @@ export class MovieService {
   }
 
   getPopular(page: number = 1): Observable<PaginatedMovieResponse> {
-    return this.http.get<PaginatedMovieResponse>(environment.movieApi.popular, {
-      params: {
-        page: page,
-        language: this.language,
-      },
-    });
+    return this.http.get<PaginatedMovieResponse>(
+      `${this.baseUrl}/movie/popular`,
+      {
+        params: {
+          page: page,
+          language: this.language,
+        },
+      }
+    );
   }
 
   getTopRated(page: number = 1): Observable<PaginatedMovieResponse> {
     return this.http.get<PaginatedMovieResponse>(
-      environment.movieApi.topRated,
+      `${this.baseUrl}/movie/top_rated`,
       {
         params: {
           page: page,
@@ -59,9 +69,8 @@ export class MovieService {
   }
 
   getTrending(page: number = 1): Observable<PaginatedMovieResponse> {
-    // some movie titles missing from response
     return this.http.get<PaginatedMovieResponse>(
-      environment.movieApi.trending,
+      `${this.baseUrl}/trending/movie/week`,
       {
         params: {
           page: page,
@@ -72,18 +81,21 @@ export class MovieService {
   }
 
   search(query: string, page: number = 1): Observable<PaginatedMovieResponse> {
-    return this.http.get<PaginatedMovieResponse>(environment.movieApi.search, {
-      params: {
-        page: page,
-        query: query,
-        include_adult: false,
-        language: this.language,
-      },
-    });
+    return this.http.get<PaginatedMovieResponse>(
+      `${this.baseUrl}/search/movie`,
+      {
+        params: {
+          page: page,
+          query: query,
+          include_adult: false,
+          language: this.language,
+        },
+      }
+    );
   }
 
   getMovieById(movieId: number): Observable<Movie> {
-    return this.http.get<Movie>(environment.movieApi.details + `/${movieId}`, {
+    return this.http.get<Movie>(`${this.baseUrl}/movie/${movieId}`, {
       params: {
         language: this.language,
       },

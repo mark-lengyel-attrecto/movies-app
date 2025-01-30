@@ -11,7 +11,6 @@ import {
 import { Movie } from '../../interfaces/movie.interface';
 import { MovieService } from '../../services/movie.service';
 
-import { environment } from 'src/environments/environment';
 import { Genre } from '../../interfaces/genre.interface';
 import * as bootstrap from 'bootstrap';
 import { ReleaseDatePipe } from '../../pipes/release-date.pipe';
@@ -30,17 +29,11 @@ export class DialogComponent implements AfterViewInit {
 
   @ViewChild('modal') modalElement!: ElementRef;
 
-  readonly baseUrl: string = this.movieService.posterBaseHighRes;
-
   modal!: bootstrap.Modal;
   movie: WritableSignal<Movie | undefined> = signal(undefined);
 
   imdbLink = computed(() => {
-    if (environment.imdbBaseUrl && this.movie()?.imdb_id) {
-      return `${environment.imdbBaseUrl}/${this.movie()?.imdb_id}`;
-    } else {
-      return '';
-    }
+    return this.movieService.getImdbUrl(this.movie()?.imdb_id || '');
   });
 
   genreString = computed(() =>
@@ -71,6 +64,12 @@ export class DialogComponent implements AfterViewInit {
       'name'
     )
   );
+
+  backdropUrl = computed(() => {
+    return `${this.movieService.getPosterUrl('w500')}${
+      this.movie()?.backdrop_path
+    }`;
+  });
 
   constructor(private movieService: MovieService) {}
 

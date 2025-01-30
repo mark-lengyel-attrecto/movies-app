@@ -9,7 +9,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { MovieService } from '../../services/movie.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MovieListComponent } from '../../components/movie-list/movie-list.component';
 
 @Component({
@@ -17,7 +17,7 @@ import { MovieListComponent } from '../../components/movie-list/movie-list.compo
   template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./top-rated.component.scss'],
   standalone: true,
-  imports: [RouterLink, MovieListComponent],
+  imports: [MovieListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopRatedComponent implements OnInit {
