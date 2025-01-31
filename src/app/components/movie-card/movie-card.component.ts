@@ -17,7 +17,6 @@ import { DialogComponent } from '../dialog/dialog.component';
   selector: 'app-movie-card',
   templateUrl: './movie-card.component.html',
   styleUrls: ['./movie-card.component.scss'],
-  standalone: true,
   imports: [DialogComponent, ReleaseDatePipe],
 })
 export class MovieCardComponent implements OnInit {

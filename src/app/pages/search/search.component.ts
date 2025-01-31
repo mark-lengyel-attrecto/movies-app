@@ -15,7 +15,6 @@ import { ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-search',
   template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./search.component.scss'],
-  standalone: true,
   imports: [MovieListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

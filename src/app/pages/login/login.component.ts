@@ -16,7 +16,6 @@ import { NgClass } from '@angular/common';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  standalone: true,
   imports: [FormsModule, ReactiveFormsModule, NgClass],
 })
 export class LoginComponent implements OnInit {

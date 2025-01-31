@@ -22,7 +22,6 @@ import { NgClass, AsyncPipe } from '@angular/common';
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
-  standalone: true,
   imports: [RouterLink, FormsModule, ReactiveFormsModule, NgClass, AsyncPipe],
 })
 export class NavbarComponent implements OnInit {

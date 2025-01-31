@@ -16,7 +16,6 @@ import { MovieListComponent } from '../../components/movie-list/movie-list.compo
   selector: 'app-top-rated',
   template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./top-rated.component.scss'],
-  standalone: true,
   imports: [MovieListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

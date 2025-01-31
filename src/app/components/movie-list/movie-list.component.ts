@@ -17,7 +17,6 @@ import { PAGE_SIZE } from 'src/app/configs/app.config';
   selector: 'app-movie-list',
   templateUrl: './movie-list.component.html',
   styleUrl: './movie-list.component.scss',
-  standalone: true,
   imports: [AsyncPipe, MovieCardComponent, PaginatorComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

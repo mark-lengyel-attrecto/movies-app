@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-home',
   template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./home.component.scss'],
-  standalone: true,
   imports: [MovieListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

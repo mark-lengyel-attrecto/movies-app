@@ -14,7 +14,6 @@ import {
   PreloadAllModules,
   provideRouter,
   Route,
-  withDebugTracing,
   withPreloading,
 } from '@angular/router';
 import { AuthGuard } from './app/guards/auth.guard';

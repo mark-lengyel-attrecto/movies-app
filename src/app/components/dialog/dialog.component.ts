@@ -20,7 +20,6 @@ import { ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss'],
-  standalone: true,
   imports: [ReleaseDatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

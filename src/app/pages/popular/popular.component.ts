@@ -16,7 +16,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-popular',
   template: `<app-movie-list [movieData$]="movieData$()" />`,
   styleUrls: ['./popular.component.scss'],
-  standalone: true,
   imports: [MovieListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
