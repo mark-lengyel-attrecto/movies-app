@@ -1,52 +1,54 @@
-<div
-  class="container rounded bg-body-tertiary shadow-lg overflow-hidden w-25 mt-5 p-3"
->
-  <form
-    [formGroup]="loginForm"
-    (ngSubmit)="onSubmit()"
-    #loginFormElement="ngForm"
+<div class="row m-2 mt-5">
+  <div
+    class="container rounded bg-body-tertiary shadow-lg overflow-hidden col-12 col-md-6 col-lg-4 col-xl-3 p-3"
   >
-    <label for="username">Username</label>
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      #loginFormElement="ngForm"
+    >
+      <label for="username">Username</label>
 
-    <input
-      [ngClass]="{ 'is-invalid': isErrorOutputEnabled('username') }"
-      id="username"
-      formControlName="username"
-      class="form-control"
-    />
+      <input
+        [ngClass]="{ 'is-invalid': isErrorOutputEnabled('username') }"
+        id="username"
+        formControlName="username"
+        class="form-control"
+      />
 
-    @if(isErrorOutputEnabled('username')) {
-    <div class="invalid-feedback">
-      @if(hasError('username', 'email')) { Username is invalid! }
-      @if(hasError('username', 'required')) { Username is required! }
-    </div>
-    }
+      @if(isErrorOutputEnabled('username')) {
+      <div class="invalid-feedback">
+        @if(hasError('username', 'email')) { Username is invalid! }
+        @if(hasError('username', 'required')) { Username is required! }
+      </div>
+      }
 
-    <label for="password" class="mt-3">Password</label>
+      <label for="password" class="mt-3">Password</label>
 
-    <input
-      [ngClass]="{ 'is-invalid': isErrorOutputEnabled('password') }"
-      id="password"
-      type="password"
-      formControlName="password"
-      class="form-control"
-    />
+      <input
+        [ngClass]="{ 'is-invalid': isErrorOutputEnabled('password') }"
+        id="password"
+        type="password"
+        formControlName="password"
+        class="form-control"
+      />
 
-    @if(isErrorOutputEnabled('password')) {
-    <div class="invalid-feedback">
-      @if(hasError('password', 'pattern')) { Password is invalid! }
-      @if(hasError('password', 'required')) { Password is required! }
-    </div>
-    }
+      @if(isErrorOutputEnabled('password')) {
+      <div class="invalid-feedback">
+        @if(hasError('password', 'pattern')) { Password is invalid! }
+        @if(hasError('password', 'required')) { Password is required! }
+      </div>
+      }
 
-    <button [disabled]="loading" class="btn btn-primary mt-3">
-      @if(loading) {
-      <span class="spinner-border spinner-border-sm mr-1"></span>
-      } Login
-    </button>
+      <button [disabled]="loading" class="btn btn-primary mt-3">
+        @if(loading) {
+        <span class="spinner-border spinner-border-sm mr-1"></span>
+        } Login
+      </button>
 
-    @if(error) {
-    <div class="alert alert-danger mb-0 mt-3">{{ error }}</div>
-    }
-  </form>
+      @if(error) {
+      <div class="alert alert-danger mb-0 mt-3">{{ error }}</div>
+      }
+    </form>
+  </div>
 </div>
