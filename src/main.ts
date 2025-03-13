@@ -14,6 +14,7 @@ import {
   PreloadAllModules,
   provideRouter,
   Route,
+  withHashLocation,
   withPreloading,
 } from '@angular/router';
 import { AuthGuard } from './app/guards/auth.guard';
@@ -71,7 +72,11 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule, FormsModule, ReactiveFormsModule),
     provideHttpClient(withInterceptorsFromDi()),
-    provideRouter(routes, withPreloading(PreloadAllModules)),
+    provideRouter(
+      routes,
+      withPreloading(PreloadAllModules),
+      withHashLocation()
+    ),
     provideAnimations(),
     { provide: HTTP_INTERCEPTORS, useClass: ApiKeyInterceptor, multi: true },
   ],
