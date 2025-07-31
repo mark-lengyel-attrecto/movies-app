@@ -1,6 +1,6 @@
 export const environment = {
   movieApi: {
-    key: '1c5abaaeaa13c66b570ad3042a0d51f4',
+    key: import.meta.env.NG_APP_TMDB_API_KEY,
     baseUrl: 'https://api.themoviedb.org/3',
     imageBaseUrl: 'https://image.tmdb.org',
   },
