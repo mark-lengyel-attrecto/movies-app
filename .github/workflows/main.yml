@@ -30,6 +30,8 @@ jobs:
 
       - name: Build Angular App
         run: npm run build -- --configuration production --base-href="/movies-app/"
+        env:
+          NG_APP_TMDB_API_KEY: ${{ secrets.NG_APP_TMDB_API_KEY }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
