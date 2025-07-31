@@ -1,1 +1,0 @@
-import{Ma as a}from"./chunk-KI75AEYF.js";var n=(()=>{class e{transform(t,r){let i=t.split("-");switch(r){case"yyyy":return i[0];case"mm":return i[1];case"dd":return i[2];default:return t}}static{this.\u0275fac=function(r){return new(r||e)}}static{this.\u0275pipe=a({name:"releaseDate",type:e,pure:!0})}}return e})();export{n as ReleaseDatePipe};
